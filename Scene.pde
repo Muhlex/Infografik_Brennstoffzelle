@@ -20,5 +20,20 @@ class Scene {
     for (Element e : elements) {
       e.draw();
     }
+
+    // HEADER
+
+    // Title
+    pushStyle();
+
+    noStroke();
+    fill(colAccentDark);
+    textFont(fontTitle);
+    textAlign(LEFT, TOP);
+    text("Die Brennstoffzelle", 30, 25);
+
+    popStyle();
+
+    // Navigation Bar
   }
 }

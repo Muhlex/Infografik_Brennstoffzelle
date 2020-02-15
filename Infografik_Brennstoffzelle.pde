@@ -44,9 +44,6 @@ void setup() {
 void draw() {
   background(colBright);
   scenes[currentScene].draw();
-  fill(colPrimary);
-  textFont(fontTitle);
-  text("Genuss!!"+ sub2 + supPlus + supMinus, 400, 400);
 
   // Debug show mouse position
   if (frameCount % 15 == 0) {

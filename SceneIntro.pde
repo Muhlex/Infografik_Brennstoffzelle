@@ -9,6 +9,5 @@ class SceneIntro extends Scene {
   @Override
   void draw() {
     super.draw();
-    text("test", 40, 80);
   }
 }
