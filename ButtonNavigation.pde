@@ -15,10 +15,9 @@ class ButtonNavigation extends Button {
 
     pushStyle();
 
-    this.setFontStyle();
+    this.setFontStyle(false);
     this.w = int(textWidth(label)) + paddingX * 2;
     this.h = int(g.textLeading);
-    println("textLeading: "+g.textLeading);
 
     popStyle();
 
@@ -36,13 +35,6 @@ class ButtonNavigation extends Button {
     this.isActive = (currentScene == destinationScene);
 
     // Display
-    pushStyle();
-
-    setFontStyle();
-    text(this.label, this.x + this.paddingX, this.y);
-
-    popStyle();
-
     if (this.isActive) {
       pushStyle();
 
@@ -51,10 +43,22 @@ class ButtonNavigation extends Button {
 
       popStyle();
     }
+
+    pushStyle();
+
+    setFontStyle(this.isHovered);
+    text(this.label, this.x + this.paddingX, this.y);
+
+    popStyle();
   }
 
-  void setFontStyle() {
-    fill(colText);
+  void setFontStyle(boolean useHoverStyle) {
+    if (useHoverStyle) {
+      fill(colPrimary);
+    }
+    else {
+      fill(colText);
+    }
     textFont(fontNavigation);
     textAlign(LEFT, TOP);
   }

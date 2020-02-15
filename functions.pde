@@ -1,3 +1,8 @@
+boolean isMouseInsideRect(float x1, float y1, float x2, float y2) {
+  return (mouseX >= x1 && mouseX <= x2) &&
+         (mouseY >= y1 && mouseY <= y2);
+}
+
 void textExt(String text, float x, float y) {
   textExt(text, x, y, width, null, null);
 }

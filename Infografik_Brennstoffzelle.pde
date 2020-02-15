@@ -48,6 +48,8 @@ void setup() {
   fontBodyBold    = createFont("font/Sarabun-Bold.ttf",    fontBodySize);
 
   scenes[0] = new SceneIntro();
+  scenes[1] = new SceneInfographics();
+  scenes[2] = new SceneQuiz();
 
   // Default styles
   noStroke();

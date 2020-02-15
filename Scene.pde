@@ -4,7 +4,7 @@ class Scene {
   Scene() {
     elements = new ArrayList<Element>();
 
-    // Navigation
+    // Initialize Navigation
     Button[] buttonsNav = new Button[3];
     String[] buttonLabels = {"Start", "Infografik", "Quiz"};
 
@@ -19,10 +19,8 @@ class Scene {
 
   void onMousePressed() {
     for (Element e : elements) {
-      if ((mouseX >= e.x && mouseX <= e.x + e.w) &&
-          (mouseY >= e.y && mouseY <= e.y + e.h)) {
-
-      e.onClick();
+      if (isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h)) {
+        e.onClick();
       }
     }
   }
@@ -33,6 +31,8 @@ class Scene {
 
   void draw() {
     for (Element e : elements) {
+      e.isHovered = isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h);
+
       e.draw();
     }
 
@@ -48,7 +48,5 @@ class Scene {
     text("Die Brennstoffzelle", 30, 25);
 
     popStyle();
-
-    // Navigation Bar
   }
 }
