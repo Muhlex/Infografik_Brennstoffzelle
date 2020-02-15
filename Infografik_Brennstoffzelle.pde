@@ -47,6 +47,12 @@ void draw() {
   fill(colPrimary);
   textFont(fontTitle);
   text("Genuss!!"+ sub2 + supPlus + supMinus, 400, 400);
+
+  // Debug show mouse position
+  if (frameCount % 15 == 0) {
+    println("Mouse X: " + mouseX);
+    println("Mouse Y: " + mouseY);
+  }
 }
 
 void mousePressed() {
