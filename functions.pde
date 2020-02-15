@@ -4,13 +4,13 @@ boolean isMouseInsideRect(float x1, float y1, float x2, float y2) {
 }
 
 void textExt(String text, float x, float y) {
-  textExt(text, x, y, width, null, null);
+  textExt(text, x, y, width, null);
 }
 void textExt(String text, float x, float y, float w) {
-  textExt(text, x, y, w, null, null);
+  textExt(text, x, y, w, null);
 }
 
-void textExt(String text, float x, float y, float w, IntList highlightedWords, PFont highlightFont) {
+void textExt(String text, float x, float y, float w, PFont highlightFont) {
   float currXPos = x;
   float currYPos = y;
   float lineHeightPx = g.textLeading;
@@ -23,9 +23,10 @@ void textExt(String text, float x, float y, float w, IntList highlightedWords, P
 
 
     for (String word : words) {
-      boolean highlightWord = ((highlightFont != null) && (highlightedWords.hasValue(wordIndex)));
+      boolean highlightWord = word.startsWith("\b");
 
       if (highlightWord) {
+        word = word.substring(1);
         pushStyle();
         textFont(highlightFont);
       }
