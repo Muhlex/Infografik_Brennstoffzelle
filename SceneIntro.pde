@@ -14,7 +14,6 @@ class SceneIntro extends Scene {
 
     // Static Start-Screen
     String buffer;
-    IntList highlightedWords;
 
     // Heading Background
     pushStyle();
