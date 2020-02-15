@@ -1,16 +1,10 @@
 class Button extends Element {
-  // color bgColor;
-  // color bgColorHover;
-  // color bgColorMousedown;
-  PShape buttonShape;
 
   Button(int x, int y, int w, int h) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-
-    buttonShape = createShape(RECT, x, y, w, h);
   }
 
   @Override
@@ -19,6 +13,11 @@ class Button extends Element {
   }
 
   void draw() {
-    shape(buttonShape);
+    pushStyle();
+
+    fill(colPrimary);
+    rect(x, y, w, h);
+
+    popStyle();
   }
 }

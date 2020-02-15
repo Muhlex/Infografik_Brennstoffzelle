@@ -6,8 +6,6 @@ class SceneIntro extends Scene {
     super();
 
     illustration = loadImage("img/png/start_illustration.png");
-    //Button testButton = new Button(10,10,300,40);
-    //elements.add(testButton);
   }
 
   @Override

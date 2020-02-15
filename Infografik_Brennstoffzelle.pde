@@ -59,7 +59,7 @@ void draw() {
   scenes[currentScene].draw();
 
   // Debug show mouse position
-  if (frameCount % 15 == 0) {
+  if (frameCount % 60 == 0) {
     println("Mouse X: " + mouseX);
     println("Mouse Y: " + mouseY);
   }
