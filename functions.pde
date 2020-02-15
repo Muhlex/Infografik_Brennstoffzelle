@@ -1,17 +1,14 @@
 void textExt(String text, float x, float y) {
-  textExt(text, x, y, 1.0, width, null, null);
+  textExt(text, x, y, width, null, null);
 }
-void textExt(String text, float x, float y, float lineHeight) {
-  textExt(text, x, y, lineHeight, width, null, null);
-}
-void textExt(String text, float x, float y, float lineHeight, float w) {
-  textExt(text, x, y, lineHeight, w, null, null);
+void textExt(String text, float x, float y, float w) {
+  textExt(text, x, y, w, null, null);
 }
 
-void textExt(String text, float x, float y, float lineHeight, float w, IntList highlightedWords, PFont highlightFont) {
+void textExt(String text, float x, float y, float w, IntList highlightedWords, PFont highlightFont) {
   float currXPos = x;
   float currYPos = y;
-  float lineHeightAbsolute = (textAscent() + textDescent()) * lineHeight;
+  float lineHeightPx = g.textLeading;
   String paragraphs[] = text.split("\n");
 
   int wordIndex = 0;
@@ -21,31 +18,32 @@ void textExt(String text, float x, float y, float lineHeight, float w, IntList h
 
 
     for (String word : words) {
+      boolean highlightWord = ((highlightFont != null) && (highlightedWords.hasValue(wordIndex)));
+
+      if (highlightWord) {
+        pushStyle();
+        textFont(highlightFont);
+      }
+
       float widthWord = textWidth(word);
 
       // Word has no space in current line
       if (widthWord > w - currXPos) {
-        currYPos += lineHeightAbsolute;
+        currYPos += lineHeightPx;
         currXPos = x;
       }
 
-      if ((highlightFont != null) && (highlightedWords.hasValue(wordIndex))) {
-        pushStyle();
-        textFont(highlightFont);
+      text(word, currXPos, currYPos);
 
-        text(word, currXPos, currYPos);
-
+      if (highlightWord) {
         popStyle();
-      }
-      else {
-        text(word, currXPos, currYPos);
       }
 
       currXPos += widthWord + textWidth(" ");
       wordIndex++;
     }
 
-    currYPos += lineHeightAbsolute;
+    currYPos += lineHeightPx;
     currXPos = x;
   }
 }
