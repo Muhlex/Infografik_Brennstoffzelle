@@ -7,9 +7,8 @@ class Scene {
 
   void onMousePressed() {
     for (Element e : elements) {
-      boolean success = (mouseX >= e.x && mouseX <= e.x + e.w) && //<>//
+      boolean success = (mouseX >= e.x && mouseX <= e.x + e.w) &&
                         (mouseY >= e.y && mouseY <= e.y + e.h);
-      println(success);
     }
   }
 
