@@ -15,6 +15,7 @@ class SceneIntro extends Scene {
     super.draw();
 
     // Static Start-Screen
+    String buffer;
 
     // Heading Background
     pushStyle();
@@ -36,20 +37,25 @@ class SceneIntro extends Scene {
     textFont(fontHeading);
     textAlign(LEFT, TOP);
     textLeading(fontHeadingSize * defaultLineHeight);
-    String text = "Was macht die Brennstoffzelle so umweltfreundlich, und wie genau funktioniert sie überhaupt?";
-    text(text, 32, 205, 543, 132);
+    buffer = "Was macht die Brennstoffzelle so umweltfreundlich, und wie genau funktioniert sie überhaupt?";
+    text(buffer, 32, 205, 543, 132);
 
     popStyle();
 
     // Footnote
     pushStyle();
 
-    fill(colBright);
-    textFont(fontHeading);
+    fill(colText);
+    textFont(fontBody);
     textAlign(LEFT, TOP);
-    textLeading(fontHeadingSize * defaultLineHeight);
-    String text = "Was macht die Brennstoffzelle so umweltfreundlich, und wie genau funktioniert sie überhaupt?";
-    text(text, 32, 205, 543, 132);
+    textLeading(fontBodySize * defaultLineHeight);
+    buffer = "Felix Bastian\nInteraktive Lehrmedien Prof. Ralph Tille Wintersemester 2019/-20";
+
+    IntList boldWords = new IntList();
+    boldWords.append(0);
+    boldWords.append(1);
+    textExt(buffer, 32, 664, defaultLineHeight, 320, boldWords, fontBodyBold);
+    //text(buffer, 32, 664, 320, 500);
 
     popStyle();
 
