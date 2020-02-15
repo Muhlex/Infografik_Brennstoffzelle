@@ -59,11 +59,24 @@ class SceneIntro extends Scene {
     highlightedWords = new IntList();
     highlightedWords.append(0);
     highlightedWords.append(1);
-    //textExt(buffer, 32, 664, 320, highlightedWords, fontBodyBold);
+    textExt(buffer, 32, 664, 320, highlightedWords, fontBodyBold);
 
     popStyle();
 
     // Illustration
     image(illustration, 409, 292, 612, 503);
+
+    // Navigation Hints
+    pushStyle();
+
+    fill(colText);
+    textFont(fontBodyBold);
+    textAlign(LEFT, TOP);
+
+    text("Sag’s mir!", 743, 91);
+
+    text("Weiß ich!", 939, 91);
+
+    popStyle();
   }
 }
