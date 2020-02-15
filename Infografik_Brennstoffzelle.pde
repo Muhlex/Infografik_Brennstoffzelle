@@ -8,6 +8,13 @@ PFont fontLead;
 PFont fontLeadBold;
 PFont fontBody;
 PFont fontBodyBold;
+int   fontTitleSize      = 52;
+int   fontNavigationSize = 36;
+int   fontHeadingSize    = 32;
+int   fontLeadSize       = 24;
+int   fontBodySize       = 18;
+
+float   defaultLineHeight  = 1.3;
 
 color colBright = #FFFFFF;
 color colPrimary = #67647E;
@@ -30,15 +37,19 @@ void setup() {
   pixelDensity(displayDensity());
   frameRate(60);
 
-  fontTitle      = createFont("font/Sarabun-Bold.ttf",    52);
-  fontNavigation = createFont("font/Sarabun-Regular.ttf", 36);
-  fontHeading    = createFont("font/Sarabun-Regular.ttf", 32);
-  fontLead       = createFont("font/Sarabun-Regular.ttf", 24);
-  fontLeadBold   = createFont("font/Sarabun-Bold.ttf",    24);
-  fontBody       = createFont("font/Sarabun-Regular.ttf", 18);
-  fontBodyBold   = createFont("font/Sarabun-Bold.ttf",    18);
+  fontTitle      = createFont("font/Sarabun-Bold.ttf",    fontTitleSize);
+  fontNavigation = createFont("font/Sarabun-Regular.ttf", fontNavigationSize);
+  fontHeading    = createFont("font/Sarabun-Regular.ttf", fontHeadingSize);
+  fontLead       = createFont("font/Sarabun-Regular.ttf", fontLeadSize);
+  fontLeadBold   = createFont("font/Sarabun-Bold.ttf",    fontLeadSize);
+  fontBody       = createFont("font/Sarabun-Regular.ttf", fontBodySize);
+  fontBodyBold   = createFont("font/Sarabun-Bold.ttf",    fontBodySize);
 
   scenes[0] = new SceneIntro();
+
+  // Default styles
+  noStroke();
+  fill(colPrimary);
 }
 
 void draw() {
