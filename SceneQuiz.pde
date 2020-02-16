@@ -10,7 +10,7 @@ class SceneQuiz extends Scene {
     IntList solutions = new IntList();
 
     questionTitle = "Ist die richtige Antwort B?";
-    answers.append("Nein es ist A.");
+    answers.append("Nein es ist A.\n\bGlaube \bich.");
     answers.append("Ja genau.");
     answers.append("Keine Ahnung.");
     solutions.append(1);
@@ -86,11 +86,13 @@ class SceneQuiz extends Scene {
     fill(colText);
     textFont(fontLead);
     textAlign(LEFT, TOP);
-    textLeading(fontLeadSize * defaultLineHeight);
+    textLeading(fontLeadSize * 1);
 
-    textExt(quiz.getCurrAnswer(0), 146, 514, 445, fontLeadBold);
-    textExt(quiz.getCurrAnswer(1), 146, 611, 445, fontLeadBold);
-    textExt(quiz.getCurrAnswer(2), 146, 708, 445, fontLeadBold);
+    int currYPos = 504;
+    for (int i = 0; i <= 2; i++) {
+      textExt(quiz.getCurrAnswer(i), 146, currYPos, 445, fontLeadBold);
+      currYPos += 96;
+    }
 
     popStyle();
   }
