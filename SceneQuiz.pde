@@ -6,6 +6,7 @@ class SceneQuiz extends Scene {
   ButtonAction buttonConfirm;
   ButtonAction buttonContinue;
   ButtonAction buttonRestart;
+  ValidationResult result;
 
   SceneQuiz() {
     super();
@@ -65,6 +66,9 @@ class SceneQuiz extends Scene {
 
         for (Checkbox checkbox : checkboxes) {
           checkbox.hide();
+          checkbox.checked = false;
+          checkbox.disabled = false;
+          checkbox.currIcon = 0;
         }
       }
     });
@@ -89,9 +93,25 @@ class SceneQuiz extends Scene {
     buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonActionCallback() {
       @Override
       void onClick() {
-        quiz.confirmAnswers();
+        result = quiz.confirmAnswers();
         buttonConfirm.hide();
         buttonContinue.show();
+
+        for (int i = 0; i < checkboxes.length; i++) {
+
+          checkboxes[i].disabled = true;
+
+          if (result.answersSelectedFalsely.hasValue(i)) {
+            checkboxes[i].currIcon = 1;
+          }
+          else if (result.answersSelectedCorrectly.hasValue(i)) {
+            checkboxes[i].currIcon = 3;
+          }
+          else if (result.answersNotSelectedFalsely.hasValue(i)) {
+            checkboxes[i].checked = true;
+            checkboxes[i].currIcon = 2;
+          }
+        }
       }
     });
     buttonConfirm.hide();
@@ -106,6 +126,8 @@ class SceneQuiz extends Scene {
 
         for (Checkbox checkbox : checkboxes) {
           checkbox.checked = false;
+          checkbox.currIcon = 0;
+          checkbox.disabled = false;
         }
       }
     });
@@ -186,6 +208,17 @@ class SceneQuiz extends Scene {
 
       int currYPos = 504;
       for (int i = 0; i <= 2; i++) {
+        if (quiz.answersConfirmed) {
+          if (result.answersSelectedCorrectly.hasValue(i)) {
+            fill(colAccentDark);
+          }
+          else if (result.answersSelectedFalsely.hasValue(i)) {
+            fill(colRed);
+          }
+          else {
+            fill(colText);
+          }
+        }
         textExt(quiz.getCurrAnswer(i), 146, currYPos, 445, fontLeadBold);
         currYPos += 96;
       }

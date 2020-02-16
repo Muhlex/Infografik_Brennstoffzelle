@@ -1,7 +1,8 @@
 class Checkbox extends Button {
 
   int visualWidth;
-  PShape iconCross;
+  PShape[] icon;
+  int currIcon;
 
   boolean disabled;
   boolean checked;
@@ -13,13 +14,21 @@ class Checkbox extends Button {
     this.visualWidth = visualWidth;
     this.callback = callback;
     this.value = value;
+    this.disabled = false;
+    this.checked = false;
 
-    this.iconCross = loadShape("img/svg/cross.svg");
+    this.icon = new PShape[4];
+    this.icon[0] = loadShape("img/svg/cross.svg");
+    this.icon[1] = loadShape("img/svg/cross_red.svg");
+    this.icon[2] = loadShape("img/svg/checkmark.svg");
+    this.icon[3] = loadShape("img/svg/checkmark_green.svg");
+
+    this.currIcon = 0;
   }
 
   @Override
   void onClick() {
-    if (! this.isHidden) {
+    if (! this.disabled) {
       this.checked = !this.checked;
       callback.onChange(this.value, this.checked);
     }
@@ -27,9 +36,6 @@ class Checkbox extends Button {
 
   @Override
   void draw() {
-    if (this.isHidden) {
-      return;
-    }
 
     pushStyle();
 
@@ -48,7 +54,7 @@ class Checkbox extends Button {
     popStyle();
 
     if (this.checked) {
-      shape(iconCross, this.x, this.y, this.visualWidth, this.h);
+      shape(icon[currIcon], this.x, this.y, this.visualWidth, this.h);
     }
   }
 }

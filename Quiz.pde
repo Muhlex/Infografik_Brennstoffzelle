@@ -3,6 +3,7 @@ class Quiz {
   ArrayList<Question> questions;
   //ArrayList<ClozeTest> clozeTests;
   QuizState state;
+  boolean answersConfirmed;
   int currQuestion;
   IntList selectedAnswers;
   int score;
@@ -33,9 +34,10 @@ class Quiz {
 
   void reset() {
     this.currQuestion = 0;
-    this.selectedAnswers.clear();
+    this.selectedAnswers = new IntList();
     this.score = 0;
     this.state = QuizState.INITIAL;
+    this.answersConfirmed = false;
   }
 
   void start() {
@@ -52,10 +54,11 @@ class Quiz {
     selectedAnswers.removeValue(answer);
   }
 
-  void confirmAnswers() {
+  ValidationResult confirmAnswers() {
     ValidationResult result = questions.get(currQuestion).validate(selectedAnswers);
     score += result.amountCorrect * 10;
-    println(score);
+    answersConfirmed = true;
+    return result;
   }
 
   void nextQuestion() {
@@ -63,6 +66,12 @@ class Quiz {
       case QUESTIONS:
         if (currQuestion < questions.size() - 1) {
           currQuestion++;
+          answersConfirmed = false;
+          selectedAnswers = new IntList();
+        }
+        //else if (! clozeTests.isEmpty()) {
+        else {
+          println("start clozetests");
         }
       break;
 
