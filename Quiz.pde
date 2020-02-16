@@ -23,6 +23,20 @@ class Quiz {
   String getCurrQuestion() {
     return questions.get(currQuestion).questionTitle;
   }
+
+  String getCurrAnswer(int answer) {
+    return questions.get(currQuestion).answersLabel.get(answer);
+  }
+
+  void selectAnswer(int answer) {
+    selectedAnswers.append(answer);
+  }
+  void deselectAnswer(int answer) {
+    /* for (int i = 0; i < selectedAnswers.size(); i++) {
+      selectedAnswers.get(i) == ;
+    } */
+    selectedAnswers.removeValue(answer);
+  }
 }
 
 enum QuizState {

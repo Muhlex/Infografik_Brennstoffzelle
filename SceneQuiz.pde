@@ -1,6 +1,7 @@
 class SceneQuiz extends Scene {
 
   Quiz quiz;
+  Checkbox[] checkboxes = new Checkbox[3];
 
   SceneQuiz() {
     super();
@@ -18,8 +19,27 @@ class SceneQuiz extends Scene {
     questions.add(new Question(questionTitle, answers, solutions));
     this.quiz = new Quiz(questions, 30000);
 
-    Checkbox testBox = new Checkbox(66, 508, 525, 48, 48, 0);
-    elements.add(testBox);
+    // Initialize A, B, C checkboxes
+    int currYPos = 508;
+    for (int i = 0; i <= 2; i++) {
+      checkboxes[i] = new Checkbox(66, currYPos, 525, 48, 48, i, new CheckboxCallback() {
+        @Override
+        void onChange(int value, boolean checked) {
+          onCheckboxChange(value, checked);
+        }
+      });
+      elements.add(checkboxes[i]);
+      currYPos += 96;
+    }
+  }
+
+  void onCheckboxChange(int value, boolean checked) {
+    if (checked) {
+    quiz.selectAnswer(value);
+    }
+    else {
+      quiz.deselectAnswer(value);
+    }
   }
 
   @Override
@@ -57,6 +77,20 @@ class SceneQuiz extends Scene {
     text("A", 32, 506);
     text("B", 32, 603);
     text("C", 32, 700);
+
+    popStyle();
+
+    // Answer Labels
+    pushStyle();
+
+    fill(colText);
+    textFont(fontLead);
+    textAlign(LEFT, TOP);
+    textLeading(fontLeadSize * defaultLineHeight);
+
+    textExt(quiz.getCurrAnswer(0), 146, 514, 445, fontLeadBold);
+    textExt(quiz.getCurrAnswer(1), 146, 611, 445, fontLeadBold);
+    textExt(quiz.getCurrAnswer(2), 146, 708, 445, fontLeadBold);
 
     popStyle();
   }

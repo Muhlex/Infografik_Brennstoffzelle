@@ -6,7 +6,7 @@ class ButtonNavigation extends Button {
   int destinationScene;
 
   ButtonNavigation(int x, int y, int paddingX, String label, int destinationScene) {
-    super(x, y, paddingX * 2, 32); // TODO: do this differently?
+    super(x, y, 32, 32); // TODO: do this differently?
     this.x = x;
     this.y = y;
     this.paddingX = paddingX;

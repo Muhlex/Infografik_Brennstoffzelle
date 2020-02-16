@@ -3,13 +3,15 @@ class Checkbox extends Button {
   int visualWidth;
   PShape iconCross;
 
-  int value;
   boolean disabled;
   boolean checked;
+  int value;
+  CheckboxCallback callback;
 
-  Checkbox(int x, int y, int w, int h, int visualWidth, int value) {
+  Checkbox(int x, int y, int w, int h, int visualWidth, int value, CheckboxCallback callback) {
     super(x, y, w, h);
     this.visualWidth = visualWidth;
+    this.callback = callback;
     this.value = value;
 
     this.iconCross = loadShape("img/svg/cross.svg");
@@ -18,6 +20,7 @@ class Checkbox extends Button {
   @Override
   void onClick() {
     this.checked = !this.checked;
+    callback.onChange(this.value, this.checked);
   }
 
   @Override
@@ -43,4 +46,8 @@ class Checkbox extends Button {
       shape(iconCross, this.x, this.y, this.visualWidth, this.h);
     }
   }
+}
+
+interface CheckboxCallback {
+  void onChange(int value, boolean checked);
 }
