@@ -1,41 +1,63 @@
 class SceneQuiz extends Scene {
 
+  Quiz quiz;
+
   SceneQuiz() {
     super();
+    String questionTitle;
     StringList answers = new StringList();
-    answers.append("Antwort 1");
-    answers.append("Antwort 2");
-    answers.append("Antwort 3");
     IntList solutions = new IntList();
+
+    questionTitle = "Ist die richtige Antwort B?";
+    answers.append("Nein es ist A.");
+    answers.append("Ja genau.");
+    answers.append("Keine Ahnung.");
     solutions.append(1);
 
-    Question question = new Question("Saugt Processing Glied?", answers, solutions);
+    ArrayList<Question> questions = new ArrayList<Question>();
+    questions.add(new Question(questionTitle, answers, solutions));
+    this.quiz = new Quiz(questions, 30000);
 
-    IntList selected = new IntList();
-    selected.append(1);
-    selected.append(2);
-    selected.append(0);
-    ValidationResult result = question.validate(selected);
-
-    println("result.amountCorrect: "+result.amountCorrect);
-    println("result.amountFalse: "+result.amountFalse);
-
-
-
-    ProcessingTimer timer = new ProcessingTimer(2000, new TimerCallback() {
-      @Override
-      void expired() {
-        println("cock schmeggd");
-      }
-    });
-    timer.start();
-    timer.remaining();
+    Checkbox testBox = new Checkbox(66, 508, 525, 48, 48, 0);
+    elements.add(testBox);
   }
 
   @Override
   void draw() {
     super.draw();
 
-    // Draw Quiz
+    // Heading Background
+    pushStyle();
+
+    fill(colPrimary);
+    rect(0, 281, 591, 171);
+
+    popStyle();
+
+    // Heading Text
+    pushStyle();
+
+    fill(colBright);
+    textFont(fontHeading);
+    textAlign(LEFT, TOP);
+    textLeading(fontHeadingSize * defaultLineHeight);
+
+    textExt(quiz.getCurrQuestion(), 32, 304, 519, fontHeadingBold);
+
+    popStyle();
+
+    // A, B, C Letters
+    pushStyle();
+
+    fill(colPrimary);
+    textFont(fontHeadingBold);
+    textAlign(LEFT, TOP);
+    textLeading(fontHeadingSize * defaultLineHeight);
+
+    text("A", 32, 506);
+    text("B", 32, 603);
+    text("C", 32, 700);
+
+    popStyle();
   }
 }

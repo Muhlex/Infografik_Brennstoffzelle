@@ -30,6 +30,8 @@ color colRed = #C04352;
 color colBlue = #587BAB;
 color colOrange = #EA9F2E;
 
+int   defaultStrokeWeight = 4;
+
 // Unicode characters
 String sub2 = "\u2082";
 String supPlus = "\u207A";

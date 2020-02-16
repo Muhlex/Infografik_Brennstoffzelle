@@ -1,13 +1,13 @@
 class ProcessingTimer {
 
-  int duration;
   TimerCallback callback;
 
   Timer timer;
   TimerTask timerTask;
 
-  ProcessingTimer(int duration, TimerCallback callback) {
-    this.duration = duration;
+  long pausedTimeRemaining;
+
+  ProcessingTimer(TimerCallback callback) {
     this.callback = callback;
     this.timer = new Timer();
     this.timerTask = new TimerTask() {
@@ -22,12 +22,24 @@ class ProcessingTimer {
     return this.callback;
   }
 
-  long remaining() {
-    return timerTask.scheduledExecutionTime() - System.currentTimeMillis();
+  int remaining() {
+    return int(timerTask.scheduledExecutionTime() - System.currentTimeMillis());
   }
 
-  void start() {
-    this.timer.schedule(this.timerTask, this.duration);
+  void start(int duration) {
+    this.timer.schedule(this.timerTask, duration);
+  }
+
+  boolean pause() {
+    int remaining = remaining();
+    if (remaining > 0) {
+      this.timer.cancel();
+      this.pausedTimeRemaining = remaining;
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   void modify(int modifiedDuration) {
