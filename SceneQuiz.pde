@@ -8,6 +8,9 @@ class SceneQuiz extends Scene {
   ButtonAction buttonRestart;
   ValidationResult result;
 
+  int quizTime;
+  int quizQuestionCount;
+
   SceneQuiz() {
     super();
 
@@ -38,15 +41,30 @@ class SceneQuiz extends Scene {
 
     questions.add(new Question(questionTitle, answers, solutions));
 
-    this.quiz = new Quiz(questions, 5000);
+    quizQuestionCount = 2;
+    quizTime = 91000;
+
+    this.quiz = new Quiz(questions, quizTime, new QuizEndCallback() {
+      void onEnd(QuizState reason) {
+        for (Checkbox checkbox : checkboxes) {
+          checkbox.hide();
+        }
+        buttonConfirm.hide();
+        buttonContinue.hide();
+      }
+    });
 
     // Initialize A, B, C checkboxes
     int currYPos = 508;
     for (int i = 0; i <= 2; i++) {
       checkboxes[i] = new Checkbox(66, currYPos, 525, 48, 48, i, new CheckboxCallback() {
-        @Override
         void onChange(int value, boolean checked) {
-          onCheckboxChange(value, checked);
+          if (checked) {
+            quiz.selectAnswer(value);
+          }
+          else {
+            quiz.deselectAnswer(value);
+          }
         }
       });
       checkboxes[i].hide();
@@ -56,7 +74,6 @@ class SceneQuiz extends Scene {
 
     // Initialize Action Buttons
     buttonRestart = new ButtonAction(417, 179, 22, 8, "Quiz neustarten", new ButtonActionCallback() {
-      @Override
       void onClick() {
         quiz.reset();
         buttonStart.show();
@@ -76,7 +93,6 @@ class SceneQuiz extends Scene {
     elements.add(buttonRestart);
 
     buttonStart = new ButtonAction(864, 701, 22, 8, "Quiz starten", new ButtonActionCallback() {
-      @Override
       void onClick() {
         quiz.start();
         buttonStart.hide();
@@ -91,7 +107,6 @@ class SceneQuiz extends Scene {
     elements.add(buttonStart);
 
     buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonActionCallback() {
-      @Override
       void onClick() {
         result = quiz.confirmAnswers();
         buttonConfirm.hide();
@@ -118,7 +133,6 @@ class SceneQuiz extends Scene {
     elements.add(buttonConfirm);
 
     buttonContinue = new ButtonAction(846, 701, 22, 8, "Nächste Frage", new ButtonActionCallback() {
-      @Override
       void onClick() {
         quiz.nextQuestion();
         buttonContinue.hide();
@@ -135,12 +149,20 @@ class SceneQuiz extends Scene {
     elements.add(buttonContinue);
   }
 
-  void onCheckboxChange(int value, boolean checked) {
-    if (checked) {
-      quiz.selectAnswer(value);
-    }
-    else {
-      quiz.deselectAnswer(value);
+  @Override
+  void onKeyPressed() {
+    for (int i = 0; i < checkboxes.length; i++) {
+      if ((i == 0 && (key == 'a' || key == 'A')) ||
+          (i == 1 && (key == 'b' || key == 'B')) ||
+          (i == 2 && (key == 'c' || key == 'C'))) {
+        boolean checked = checkboxes[i].checked = ! checkboxes[i].checked;
+        if (checked) {
+          quiz.selectAnswer(i);
+        }
+        else {
+          quiz.deselectAnswer(i);
+        }
+      }
     }
   }
 
@@ -148,11 +170,30 @@ class SceneQuiz extends Scene {
   void draw() {
     super.draw();
 
+    String buffer = "";
+
+    // STATIC ELEMENTS (these do not get pushed into the elements ArrayList)
+
     // Heading Background
     pushStyle();
 
     fill(colPrimary);
-    rect(0, 281, 591, 171);
+
+    switch (quiz.state) {
+      case INITIAL:
+      case TIMEUP:
+      case DONE:
+        rect(0, 281, 591, 129);
+      break;
+
+      case QUESTIONS:
+        rect(0, 281, 591, 171);
+      break;
+
+      case CLOZETESTS:
+        rect(0, 281, 591, 87);
+      break;
+    }
 
     popStyle();
 
@@ -164,26 +205,88 @@ class SceneQuiz extends Scene {
     textAlign(LEFT, TOP);
     textLeading(fontHeadingSize * defaultLineHeight);
 
-    String headingText = "";
     switch (quiz.state) {
       case INITIAL:
-        headingText = "Hier kannst Du \bdein \bWissen zum Thema Brennstoffzelle testen!";
+        buffer = "Hier kannst Du \bdein \bWissen zum Thema \bBrennstoffzelle testen!";
       break;
 
       case QUESTIONS:
-        headingText = quiz.getCurrQuestion();
+        buffer = quiz.getCurrQuestion();
       break;
 
       case CLOZETESTS:
-        headingText = "Vervollständige den Text.";
+        buffer = "Vervollständige den Text.";
+      break;
+
+      case TIMEUP:
+        buffer = "Die \bZeit ist abgelaufen!";
       break;
     }
 
-    textExt(headingText, 32, 304, 519, fontHeadingBold);
+    textExt(buffer, 32, 304, 519, fontHeadingBold);
 
     popStyle();
 
+    // Body Text
+    pushStyle();
+
+    fill(colText);
+    textFont(fontLead);
+    textAlign(LEFT, TOP);
+    textLeading(fontLeadSize * defaultLineHeight);
+
+    switch (quiz.state) {
+      case INITIAL:
+        buffer = "Hier werden Dir nacheinander verschiedene \bMultiple-Choice-Fragen gestellt. " +
+                 "Wenn du diese gemeistert hast, kommt am Ende noch ein \bLückentext auf dich zu. " +
+                 "Dabei solltest Du die Zeit im Blick behalten, da dir nur X Minuten für alle 3 Fragen zur Verfügung stehen. " +
+                 "Bei einer falschen Antwort erhältst Du eine Zeitstrafe.\n\n" +
+                 "\bViel \bErfolg!";
+        textExt(buffer, 30, 446, 564, fontLeadBold);
+      break;
+
+      case TIMEUP:
+        buffer = "Du kannst es erneut versuchen, oder dir die Infografik zuerst noch einmal genauer ansehen.";
+        textExt(buffer, 30, 446, 564, fontLeadBold);
+      break;
+    }
+
+    popStyle();
+
+    // Statistics
+    if (quiz.state != QuizState.INITIAL) {
+      pushStyle();
+
+      fill(colText);
+      textFont(fontLead);
+      textAlign(LEFT, TOP);
+      textLeading(fontLeadSize * defaultLineHeight);
+
+      switch(quiz.state) {
+        case QUESTIONS:
+        case CLOZETESTS:
+          buffer = "\bFrage \b" + (quiz.currQuestion + 1) + " \b/ \b3";
+        break;
+
+        default:
+          buffer = "\bDein \bErgebnis";
+        break;
+      }
+
+      textExt(buffer, 32, 129, 380, fontLeadBold);
+      textExt("Punktestand: \b" + quiz.score + " \b/ \b100", 32, 162, 380, fontLeadBold);
+
+      color colTimer = lerpColor(colRed, colText, (float(quiz.timer.getRemaining()) / float(quizTime)));
+      fill(colTimer);
+      textExt("Verbleibende Zeit: \b" + msToMinSecString(quiz.timer.getRemaining()), 32, 195, 380, fontLeadBold);
+
+      popStyle();
+    }
+
+    // Multiple-Choice-Question specific Elements
+
     if (quiz.state == QuizState.QUESTIONS) {
+
       // A, B, C Letters
       pushStyle();
 
@@ -222,22 +325,6 @@ class SceneQuiz extends Scene {
         textExt(quiz.getCurrAnswer(i), 146, currYPos, 445, fontLeadBold);
         currYPos += 96;
       }
-
-      popStyle();
-    }
-
-    // Statistics
-    if (quiz.state != QuizState.INITIAL) {
-      pushStyle();
-
-      fill(colText);
-      textFont(fontLead);
-      textAlign(LEFT, TOP);
-      textLeading(fontLeadSize * defaultLineHeight);
-
-      textExt("\bFrage \b1 \b/ \b3", 32, 129, 380, fontLeadBold);
-      textExt("Punktestand: \b" + quiz.score, 32, 162, 380, fontLeadBold);
-      textExt("Verbleibende Zeit: \b" + msToMinSecString(quiz.timer.getRemaining()), 32, 195, 380, fontLeadBold);
 
       popStyle();
     }

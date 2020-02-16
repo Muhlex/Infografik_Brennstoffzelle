@@ -4,10 +4,12 @@ class ProcessingTimer {
   TimerCallback callback;
   TimerTask timerTask;
 
-  long pausedTimeRemaining;
+  boolean isPaused;
+  long remainingTimeOnLastPause;
 
   ProcessingTimer(TimerCallback callback) {
     this.callback = callback;
+    this.isPaused = false;
   }
 
   TimerTask createTask() {
@@ -23,38 +25,51 @@ class ProcessingTimer {
     return this.callback;
   }
 
-  void schedule(long duration) {
+  private void schedule(long duration) {
     this.timer = new Timer();
     this.timerTask = createTask();
     this.timer.schedule(timerTask, duration);
   }
 
   void start(long duration) {
+    this.unpause();
     this.schedule(duration);
   }
 
   int getRemaining() {
-    long remainingTime = timerTask.scheduledExecutionTime() - System.currentTimeMillis();
-    if (remainingTime > 0)
-      return int(remainingTime);
-    else
-      return 0;
+    if (this.isPaused) {
+      return int(remainingTimeOnLastPause);
+    }
+    else {
+      long remainingTime = timerTask.scheduledExecutionTime() - System.currentTimeMillis();
+      if (remainingTime > 0)
+        return int(remainingTime);
+      else
+        return 0;
+    }
   }
 
   void cancel() {
+    this.unpause();
     this.timer.cancel();
   }
 
   boolean pause() {
     int remaining = getRemaining();
-    if (remaining > 0) {
+    if (remaining > 0 && ! isPaused) {
       this.timer.cancel();
-      this.pausedTimeRemaining = remaining;
-      return true;
+      this.remainingTimeOnLastPause = remaining;
+      this.isPaused = true;
     }
-    else {
-      return false;
+    return isPaused;
+  }
+
+  boolean unpause() {
+    if (isPaused) {
+      schedule(this.remainingTimeOnLastPause);
+      this.isPaused = false;
     }
+    return ! isPaused;
   }
 
   void modify(int modifiedDuration) {

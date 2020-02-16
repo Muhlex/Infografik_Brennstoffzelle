@@ -8,9 +8,11 @@ class Quiz {
   IntList selectedAnswers;
   int score;
   int availableTime;
-  ProcessingTimer timer;
 
-  Quiz(ArrayList<Question> questions, int availableTime) {
+  ProcessingTimer timer;
+  QuizEndCallback endCallback;
+
+  Quiz(ArrayList<Question> questions, int availableTime, QuizEndCallback endCallback) {
     this.questions = questions;
     this.availableTime = availableTime;
     this.state = QuizState.INITIAL;
@@ -18,13 +20,18 @@ class Quiz {
     this.score = 0;
     this.selectedAnswers = new IntList();
 
+    this.endCallback = endCallback;
     this.timer = new ProcessingTimer(new TimerCallback() {
       @Override
       void expired() {
-        println("Time Up");
         state = QuizState.TIMEUP;
+        getEndCallback().onEnd(state);
       }
     });
+  }
+
+  QuizEndCallback getEndCallback() {
+    return endCallback;
   }
 
   String getCurrQuestion() {
@@ -62,8 +69,15 @@ class Quiz {
   ValidationResult confirmAnswers() {
     ValidationResult result = questions.get(currQuestion).validate(selectedAnswers);
     score += result.amountCorrect * 10;
+    timer.subtract(result.amountFalse * 10 * 1000);
     answersConfirmed = true;
     return result;
+  }
+
+  void endQuiz() {
+    this.state = QuizState.DONE;
+    getEndCallback().onEnd(state);
+    timer.pause();
   }
 
   void nextQuestion() {
@@ -76,13 +90,18 @@ class Quiz {
         }
         //else if (! clozeTests.isEmpty()) {
         else {
-          println("start clozetests");
+          println("start clozetests here");
+          endQuiz();
         }
       break;
 
 
     }
   }
+}
+
+interface QuizEndCallback {
+  void onEnd(QuizState reason);
 }
 
 enum QuizState {

@@ -12,7 +12,7 @@ class SceneIntro extends Scene {
   void draw() {
     super.draw();
 
-    // Static Start-Screen
+    // STATIC ELEMENTS (these do not get pushed into the elements ArrayList)
     String buffer;
 
     // Heading Background
