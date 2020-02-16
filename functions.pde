@@ -53,3 +53,10 @@ void textExt(String text, float x, float y, float w, PFont highlightFont) {
     currXPos = x;
   }
 }
+
+String msToMinSecString(int ms) {
+  int secs = (ms / 1000) % 60;
+  int mins = (ms / (1000 * 60)) % 60;
+
+  return String.format("%02d:%02d", mins, secs);
+}

@@ -38,7 +38,7 @@ class SceneQuiz extends Scene {
 
     questions.add(new Question(questionTitle, answers, solutions));
 
-    this.quiz = new Quiz(questions, 30000);
+    this.quiz = new Quiz(questions, 5000);
 
     // Initialize A, B, C checkboxes
     int currYPos = 508;
@@ -237,7 +237,7 @@ class SceneQuiz extends Scene {
 
       textExt("\bFrage \b1 \b/ \b3", 32, 129, 380, fontLeadBold);
       textExt("Punktestand: \b" + quiz.score, 32, 162, 380, fontLeadBold);
-      textExt("Verbleibende Zeit: \bXXs", 32, 195, 380, fontLeadBold);
+      textExt("Verbleibende Zeit: \b" + msToMinSecString(quiz.timer.getRemaining()), 32, 195, 380, fontLeadBold);
 
       popStyle();
     }

@@ -7,10 +7,12 @@ class Quiz {
   int currQuestion;
   IntList selectedAnswers;
   int score;
+  int availableTime;
   ProcessingTimer timer;
 
-  Quiz(ArrayList<Question> questions, int time) {
+  Quiz(ArrayList<Question> questions, int availableTime) {
     this.questions = questions;
+    this.availableTime = availableTime;
     this.state = QuizState.INITIAL;
     this.currQuestion = 0;
     this.score = 0;
@@ -19,7 +21,8 @@ class Quiz {
     this.timer = new ProcessingTimer(new TimerCallback() {
       @Override
       void expired() {
-        println("Timer abgelaufen.");
+        println("Time Up");
+        state = QuizState.TIMEUP;
       }
     });
   }
@@ -38,12 +41,14 @@ class Quiz {
     this.score = 0;
     this.state = QuizState.INITIAL;
     this.answersConfirmed = false;
+    this.timer.cancel();
   }
 
   void start() {
     this.state = QuizState.QUESTIONS;
     this.currQuestion = 0;
     this.selectedAnswers.clear();
+    this.timer.start(availableTime);
   }
 
   void selectAnswer(int answer) {

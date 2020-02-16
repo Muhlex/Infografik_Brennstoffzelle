@@ -1,16 +1,17 @@
 class ProcessingTimer {
 
-  TimerCallback callback;
-
   Timer timer;
+  TimerCallback callback;
   TimerTask timerTask;
 
   long pausedTimeRemaining;
 
   ProcessingTimer(TimerCallback callback) {
     this.callback = callback;
-    this.timer = new Timer();
-    this.timerTask = new TimerTask() {
+  }
+
+  TimerTask createTask() {
+    return new TimerTask() {
       @Override
       public void run() {
         getCallback().expired();
@@ -22,16 +23,30 @@ class ProcessingTimer {
     return this.callback;
   }
 
-  int remaining() {
-    return int(timerTask.scheduledExecutionTime() - System.currentTimeMillis());
+  void schedule(long duration) {
+    this.timer = new Timer();
+    this.timerTask = createTask();
+    this.timer.schedule(timerTask, duration);
   }
 
-  void start(int duration) {
-    this.timer.schedule(this.timerTask, duration);
+  void start(long duration) {
+    this.schedule(duration);
+  }
+
+  int getRemaining() {
+    long remainingTime = timerTask.scheduledExecutionTime() - System.currentTimeMillis();
+    if (remainingTime > 0)
+      return int(remainingTime);
+    else
+      return 0;
+  }
+
+  void cancel() {
+    this.timer.cancel();
   }
 
   boolean pause() {
-    int remaining = remaining();
+    int remaining = getRemaining();
     if (remaining > 0) {
       this.timer.cancel();
       this.pausedTimeRemaining = remaining;
@@ -43,9 +58,9 @@ class ProcessingTimer {
   }
 
   void modify(int modifiedDuration) {
-    long newDuration = remaining() + modifiedDuration;
+    long newDuration = getRemaining() + modifiedDuration;
     if (newDuration > 0) {
-      this.timer.schedule(this.timerTask, newDuration);
+      this.schedule(newDuration);
     }
     else {
       this.callback.expired();
