@@ -1,12 +1,12 @@
 class Question {
 
   String questionTitle;
-  StringList answersLabel;
+  StringList answers;
   IntList solutions;
 
-  Question(String questionTitle, StringList answersLabel, IntList solutions) {
+  Question(String questionTitle, StringList answers, IntList solutions) {
     this.questionTitle = questionTitle;
-    this.answersLabel = answersLabel;
+    this.answers = answers;
     this.solutions = solutions;
   }
 
@@ -14,7 +14,7 @@ class Question {
 
     ValidationResult result = new ValidationResult();
 
-    for (int i = 0; i < answersLabel.size(); i++) {
+    for (int i = 0; i < answers.size(); i++) {
       if (selected.hasValue(i)) {
         if (solutions.hasValue(i)) {
           // Selected and is solution

@@ -18,7 +18,13 @@ class Scene {
   }
 
   void onMousePressed() {
+    ArrayList<Element> visibleElements = new ArrayList<Element>();
     for (Element e : elements) {
+      if (! e.isHidden) {
+        visibleElements.add(e);
+      }
+    }
+    for (Element e: visibleElements) {
       if (isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h)) {
         e.onClick();
       }
@@ -31,9 +37,11 @@ class Scene {
 
   void draw() {
     for (Element e : elements) {
-      e.isHovered = isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h);
+      if (! e.isHidden) {
+        e.isHovered = isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h);
 
-      e.draw();
+        e.draw();
+      }
     }
 
     // HEADER

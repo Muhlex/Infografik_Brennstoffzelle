@@ -19,12 +19,17 @@ class Checkbox extends Button {
 
   @Override
   void onClick() {
-    this.checked = !this.checked;
-    callback.onChange(this.value, this.checked);
+    if (! this.isHidden) {
+      this.checked = !this.checked;
+      callback.onChange(this.value, this.checked);
+    }
   }
 
   @Override
   void draw() {
+    if (this.isHidden) {
+      return;
+    }
 
     pushStyle();
 
