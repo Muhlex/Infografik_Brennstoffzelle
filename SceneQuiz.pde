@@ -221,9 +221,23 @@ class SceneQuiz extends Scene {
       case TIMEUP:
         buffer = "Die \bZeit ist abgelaufen!";
       break;
+
+      case DONE:
+        if (quiz.score >= 100) {
+          buffer = "Das war \bperfekt!\nDu hast alls richtig beantwortet.";
+        } else if (quiz.score >= 80) {
+          buffer = "Das war \bsehr \bgut!\nDu kennst Dich im Thema super aus.";
+        } else if (quiz.score >= 50) {
+          buffer = "Das war \bnicht \bschlecht!\nDas kannst Du aber noch besser.";
+        } else if (quiz.score >= 25) {
+          buffer = "Das war schonmal \bein \bAnfang!\nDa geht aber noch mehr.";
+        } else {
+          buffer = "Das war... immerhin ein Versuch.\n\bWiederhole den Stoff noch einmal.";
+        }
+      break;
     }
 
-    textExt(buffer, 32, 304, 519, fontHeadingBold);
+    textExt(buffer, 32, 304, 520, fontHeadingBold);
 
     popStyle();
 
