@@ -22,7 +22,7 @@ class SceneQuiz extends Scene {
 
 
 
-    QuizTimer timer = new QuizTimer(2000, new TimerCallback() {
+    ProcessingTimer timer = new ProcessingTimer(2000, new TimerCallback() {
       @Override
       void expired() {
         println("cock schmeggd");

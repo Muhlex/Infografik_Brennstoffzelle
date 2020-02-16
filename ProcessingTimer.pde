@@ -1,12 +1,12 @@
-class QuizTimer {
-
-  Timer timer;
-  TimerTask timerTask;
+class ProcessingTimer {
 
   int duration;
   TimerCallback callback;
 
-  QuizTimer(int duration, TimerCallback callback) {
+  Timer timer;
+  TimerTask timerTask;
+
+  ProcessingTimer(int duration, TimerCallback callback) {
     this.duration = duration;
     this.callback = callback;
     this.timer = new Timer();
