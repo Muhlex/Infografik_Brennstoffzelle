@@ -19,6 +19,17 @@ class SceneQuiz extends Scene {
 
     println("result.amountCorrect: "+result.amountCorrect);
     println("result.amountFalse: "+result.amountFalse);
+
+
+
+    QuizTimer timer = new QuizTimer(2000, new TimerCallback() {
+      @Override
+      void expired() {
+        println("cock schmeggd");
+      }
+    });
+    timer.start();
+    timer.remaining();
   }
 
   @Override

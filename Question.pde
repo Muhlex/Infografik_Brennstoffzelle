@@ -43,9 +43,4 @@ class ValidationResult {
     this.amountCorrect = 0;
     this.amountFalse = 0;
   }
-
-  ValidationResult(int amountCorrect, int amountFalse) {
-    this.amountCorrect = amountCorrect;
-    this.amountFalse = amountFalse;
-  }
 }

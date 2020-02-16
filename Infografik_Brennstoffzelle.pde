@@ -1,3 +1,5 @@
+import java.util.*;
+
 int currentScene = 0;
 Scene[] scenes = new Scene[3];
 
@@ -61,10 +63,10 @@ void draw() {
   scenes[currentScene].draw();
 
   // Debug show mouse position
-  if (frameCount % 60 == 0) {
-    println("Mouse X: " + mouseX);
-    println("Mouse Y: " + mouseY);
-  }
+  //if (frameCount % 60 == 0) {
+  //  println("Mouse X: " + mouseX);
+  //  println("Mouse Y: " + mouseY);
+  //}
 }
 
 void mousePressed() {
