@@ -64,7 +64,7 @@ class SceneIntro extends Scene {
     textFont(fontBodyBold);
     textAlign(LEFT, TOP);
 
-    text("Sag’s mir!", 743, 91);
+    text("Zeig’s mir!", 743, 91);
     text("Weiß ich!", 939, 91);
 
     popStyle();

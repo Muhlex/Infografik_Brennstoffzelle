@@ -42,7 +42,7 @@ class SceneQuiz extends Scene {
     questions.add(new Question(questionTitle, answers, solutions));
 
     quizQuestionCount = 2;
-    quizTime = 91000;
+    quizTime = 11000;
 
     this.quiz = new Quiz(questions, quizTime, new QuizEndCallback() {
       void onEnd(QuizState reason) {
@@ -51,6 +51,7 @@ class SceneQuiz extends Scene {
         }
         buttonConfirm.hide();
         buttonContinue.hide();
+        println("endCallback");
       }
     });
 
@@ -108,6 +109,9 @@ class SceneQuiz extends Scene {
 
     buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonActionCallback() {
       void onClick() {
+        if (quiz.state == QuizState.DONE) {
+          println("Quiz done but this shit registered");
+        }
         result = quiz.confirmAnswers();
         buttonConfirm.hide();
         buttonContinue.show();
@@ -136,7 +140,9 @@ class SceneQuiz extends Scene {
       void onClick() {
         quiz.nextQuestion();
         buttonContinue.hide();
-        buttonConfirm.show();
+        if (quiz.state != QuizState.DONE) {
+          buttonConfirm.show();
+        }
 
         for (Checkbox checkbox : checkboxes) {
           checkbox.checked = false;
@@ -232,7 +238,7 @@ class SceneQuiz extends Scene {
         } else if (quiz.score >= 25) {
           buffer = "Das war schonmal \bein \bAnfang!\nDa geht aber noch mehr.";
         } else {
-          buffer = "Das war... immerhin ein Versuch.\n\bWiederhole den Stoff noch einmal.";
+          buffer = "Das war... ein Versuch.\n\bWiederhole den Stoff noch einmal.";
         }
       break;
     }
@@ -261,6 +267,25 @@ class SceneQuiz extends Scene {
 
       case TIMEUP:
         buffer = "Du kannst es erneut versuchen, oder dir die Infografik zuerst noch einmal genauer ansehen.";
+        textExt(buffer, 30, 446, 564, fontLeadBold);
+      break;
+
+      case DONE:
+        if (quiz.score >= 100) {
+          buffer = "Deine Kenntnisse zur Brennstoffzelle sind wirklich beeindruckend.";
+        } else if (quiz.score >= 80) {
+          buffer = "Dein Verständnis zur Brennstoffzelle ist wirklich gut. " +
+                   "Vielleicht schaust Du Dir die Fachbegriffe noch einmal genauer an, um den letzten Rest herauszuholen!.";
+        } else if (quiz.score >= 50) {
+          buffer = "Schaue Dir noch einmal die Infografik an und achte auch auf die verwendete Terminologie. " +
+                   "Dann holst Du Dir auch die restlichen Punkte ab!";
+        } else if (quiz.score >= 25) {
+          buffer = "Sieh Dir die einzelnen Schritte der Infografik erneut im Detail an. " +
+                   "Wenn Du auf die Fachbegriffe und die genauen Abläufe achtest, kommst Du der Maximalpunkzzahl immer näher.";
+        } else {
+          buffer = "In der Infografik werden Dir der Aufbau, und die Abläufe der Brennstoffzelle im Detail erklärt. " +
+                   "Wenn Du Dich damit vertraut machst, erreichst du beim nächsten Mal sicher ein gutes Ergebnis.";
+        }
         textExt(buffer, 30, 446, 564, fontLeadBold);
       break;
     }

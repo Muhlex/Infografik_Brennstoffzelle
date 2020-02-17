@@ -32,7 +32,9 @@ class ProcessingTimer {
   }
 
   void start(long duration) {
-    this.unpause();
+    if (timer != null) {
+      this.cancel();
+    }
     this.schedule(duration);
   }
 
@@ -50,7 +52,9 @@ class ProcessingTimer {
   }
 
   void cancel() {
-    this.unpause();
+    if (isPaused) {
+      this.unpause();
+    }
     this.timer.cancel();
   }
 
@@ -74,10 +78,19 @@ class ProcessingTimer {
 
   void modify(int modifiedDuration) {
     long newDuration = getRemaining() + modifiedDuration;
+    this.cancel();
+
     if (newDuration > 0) {
-      this.schedule(newDuration);
+      if (this.isPaused) {
+        remainingTimeOnLastPause = newDuration;
+      }
+      else {
+        this.schedule(newDuration);
+      }
     }
     else {
+      this.remainingTimeOnLastPause = 0;
+      this.isPaused = true;
       this.callback.expired();
     }
   }
