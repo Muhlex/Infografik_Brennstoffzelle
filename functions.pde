@@ -60,3 +60,27 @@ String msToMinSecString(int ms) {
 
   return String.format("%02d:%02d", mins, secs);
 }
+
+// Get the width of the widest letter of the current font
+float getMaxLetterWidth() {
+  int charcodeUpper = 65; // A
+  int charcodeLower = 97; // a
+
+  float highestWidth = 0.0;
+
+  for (int i = charcodeUpper; i < charcodeUpper + 26; i++) {
+    float charWidth = textWidth(char(i));
+    if (charWidth > highestWidth) {
+      highestWidth = charWidth;
+    }
+  }
+
+  for (int i = charcodeLower; i < charcodeLower + 26; i++) {
+    float charWidth = textWidth(char(i));
+    if (charWidth > highestWidth) {
+      highestWidth = charWidth;
+    }
+  }
+
+  return highestWidth;
+}

@@ -27,10 +27,12 @@ class Checkbox extends Button {
   }
 
   @Override
-  void onClick() {
-    if (! this.disabled) {
-      this.checked = !this.checked;
-      callback.onChange(this.value, this.checked);
+  void onClick(boolean insideElement) {
+    if (insideElement) {
+      if (! this.disabled) {
+        this.checked = !this.checked;
+        callback.onChange(this.value, this.checked);
+      }
     }
   }
 

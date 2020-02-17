@@ -157,6 +157,7 @@ class SceneQuiz extends Scene {
 
   @Override
   void onKeyPressed() {
+    super.onKeyPressed();
     for (int i = 0; i < checkboxes.length; i++) {
       if ((i == 0 && (key == 'a' || key == 'A')) ||
           (i == 1 && (key == 'b' || key == 'B')) ||

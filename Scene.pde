@@ -26,12 +26,29 @@ class Scene {
     }
     for (Element e: visibleElements) {
       if (isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h)) {
-        e.onClick();
+        e.onClick(true);
+      }
+      else {
+        e.onClick(false);
       }
     }
   }
 
-  void onKeyPressed() {}
+  void onKeyPressed() {
+    for (Element e : elements) {
+      if (! e.isHidden) {
+        e.onKeyPressed();
+      }
+    }
+  }
+
+  void onKeyReleased() {
+    for (Element e : elements) {
+      if (! e.isHidden) {
+        e.onKeyReleased();
+      }
+    }
+  }
 
   void reset() {}
 

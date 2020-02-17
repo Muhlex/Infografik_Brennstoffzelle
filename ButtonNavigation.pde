@@ -25,8 +25,10 @@ class ButtonNavigation extends Button {
   }
 
   @Override
-  void onClick() {
-    currentScene = this.destinationScene;
+  void onClick(boolean insideElement) {
+    if (insideElement) {
+      currentScene = this.destinationScene;
+    }
   }
 
   @Override

@@ -7,7 +7,11 @@ abstract class Element {
 
   abstract void draw();
 
-  void onClick() {};
+  void onClick(boolean insideElement) {};
+
+  void onKeyPressed() {};
+
+  void onKeyReleased() {};
 
   void toggleVisibility() {
     this.isHidden = ! this.isHidden;

@@ -23,15 +23,25 @@ class ButtonAction extends Button {
     popStyle();
   }
 
-  @Override
-  void onClick() {
-    callback.onClick();
+  void setFontStyle(boolean useHoverStyle) {
+    if (useHoverStyle) {
+      fill(colPrimary);
+    }
+    else {
+      fill(colText);
+    }
+    textFont(fontBodyBold);
+    textAlign(LEFT, TOP);
   }
 
   @Override
-  void draw() {
-    // DISPLAY
+  void onClick(boolean insideElement) {
+    if (insideElement) {
+      callback.onClick();
+    }
+  }
 
+  void draw() {
     // Background
     pushStyle();
 
@@ -57,17 +67,6 @@ class ButtonAction extends Button {
     text(this.label, this.x + this.paddingX, this.y + (this.paddingY * 1.2));
 
     popStyle();
-  }
-
-  void setFontStyle(boolean useHoverStyle) {
-    if (useHoverStyle) {
-      fill(colPrimary);
-    }
-    else {
-      fill(colText);
-    }
-    textFont(fontBodyBold);
-    textAlign(LEFT, TOP);
   }
 }
 

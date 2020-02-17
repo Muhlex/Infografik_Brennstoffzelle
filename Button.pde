@@ -8,8 +8,10 @@ class Button extends Element {
   }
 
   @Override
-  void onClick() {
-    println("Button clicked.");
+  void onClick(boolean insideElement) {
+    if (insideElement) {
+      println("Button clicked.");
+    }
   }
 
   void draw() {

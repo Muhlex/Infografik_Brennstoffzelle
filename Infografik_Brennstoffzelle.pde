@@ -78,3 +78,7 @@ void mousePressed() {
 void keyPressed() {
   scenes[currentScene].onKeyPressed();
 }
+
+void keyReleased() {
+  scenes[currentScene].onKeyReleased();
+}
