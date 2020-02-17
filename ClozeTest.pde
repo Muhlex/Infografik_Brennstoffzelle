@@ -8,11 +8,15 @@ class ClozeTest {
   }
 
   IntList validate(StringList answers) {
+    IntList correctAnswers = new IntList();
     for (int i = 0; i < solutions.size(); i++) {
-      if (solutions.get(i) == answers.get(i)) {
-        println("Input "+i+" is correct");
+      String answer   = answers.get(i).toLowerCase();
+      String solution = solutions.get(i).toLowerCase();
+
+      if (answer.equals(solution)) {
+        correctAnswers.append(i);
       }
     }
-    return new IntList();
+    return correctAnswers;
   }
 }

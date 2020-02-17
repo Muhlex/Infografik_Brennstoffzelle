@@ -6,7 +6,9 @@ class SceneQuiz extends Scene {
   ButtonAction buttonConfirm;
   ButtonAction buttonContinue;
   ButtonAction buttonRestart;
-  ValidationResult result;
+  ValidationResult questionResult;
+  IntList clozeResult;
+  ArrayList<InputText> inputs;
 
   int quizTime;
   int quizQuestionCount;
@@ -41,17 +43,67 @@ class SceneQuiz extends Scene {
 
     questions.add(new Question(questionTitle, answers, solutions));
 
-    quizQuestionCount = 2;
-    quizTime = 11000;
+    ArrayList<ClozeTest> clozeTests = new ArrayList<ClozeTest>();
+    StringList clozeTextSnippets = new StringList();
+    StringList clozeSolutions = new StringList();
 
-    this.quiz = new Quiz(questions, quizTime, new QuizEndCallback() {
+    clozeTextSnippets.append("Das ist der Text vor der ersten");
+    clozeSolutions.append("Lücke");
+    clozeTextSnippets.append("Danach kommt noch ein Stück");
+    clozeSolutions.append("Text");
+
+    ClozeTest clozeTest = new ClozeTest(clozeTextSnippets, clozeSolutions);
+    clozeTests.add(clozeTest);
+
+    pushStyle();
+
+    fill(colText);
+    textFont(fontLead);
+    textAlign(LEFT, TOP);
+    textLeading(52);
+
+    inputs = createClozeInputs(clozeTest, 32, 423, 560);
+
+    popStyle();
+
+    for (int i = 0; i < inputs.size(); i++) {
+      final int id = i;
+
+      inputs.get(i).callback = new InputTextCallback() {
+        void onChange(String value) {
+          quiz.clozeAnswerValues.set(id, value);
+        }
+      };
+
+      inputs.get(i).hide();
+    }
+    elements.addAll(inputs);
+
+    quizQuestionCount = 2;
+    quizTime = 91000;
+
+    this.quiz = new Quiz(questions, clozeTests, quizTime, new QuizCallback() {
       void onEnd(QuizState reason) {
         for (Checkbox checkbox : checkboxes) {
           checkbox.hide();
         }
+
+        for (InputText input : inputs) {
+          input.hide();
+        }
+
         buttonConfirm.hide();
         buttonContinue.hide();
-        println("endCallback");
+      }
+
+      void onStartClozeTests() {
+        for (Checkbox checkbox : checkboxes) {
+          checkbox.hide();
+        }
+
+        for (InputText input : inputs) {
+          input.show();
+        }
       }
     });
 
@@ -81,12 +133,20 @@ class SceneQuiz extends Scene {
         buttonRestart.hide();
         buttonConfirm.hide();
         buttonContinue.hide();
+        buttonContinue.label = "Nächste Frage";
 
         for (Checkbox checkbox : checkboxes) {
           checkbox.hide();
           checkbox.checked = false;
           checkbox.disabled = false;
           checkbox.currIcon = 0;
+        }
+
+        for (InputText input : inputs) {
+          input.hide();
+          input.value = "";
+          input.isDisabled = false;
+          input.isCorrect = false;
         }
       }
     });
@@ -109,27 +169,50 @@ class SceneQuiz extends Scene {
 
     buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonActionCallback() {
       void onClick() {
-        if (quiz.state == QuizState.DONE) {
-          println("Quiz done but this shit registered");
-        }
-        result = quiz.confirmAnswers();
-        buttonConfirm.hide();
-        buttonContinue.show();
+        switch (quiz.state) {
+          case QUESTIONS:
+            questionResult = quiz.confirmAnswers();
+            buttonConfirm.hide();
+            buttonContinue.show();
 
-        for (int i = 0; i < checkboxes.length; i++) {
+            for (int i = 0; i < checkboxes.length; i++) {
 
-          checkboxes[i].disabled = true;
+              checkboxes[i].disabled = true;
 
-          if (result.answersSelectedFalsely.hasValue(i)) {
-            checkboxes[i].currIcon = 1;
-          }
-          else if (result.answersSelectedCorrectly.hasValue(i)) {
-            checkboxes[i].currIcon = 3;
-          }
-          else if (result.answersNotSelectedFalsely.hasValue(i)) {
-            checkboxes[i].checked = true;
-            checkboxes[i].currIcon = 2;
-          }
+              if (questionResult.answersSelectedFalsely.hasValue(i)) {
+                checkboxes[i].currIcon = 1;
+              }
+              else if (questionResult.answersSelectedCorrectly.hasValue(i)) {
+                checkboxes[i].currIcon = 3;
+              }
+              else if (questionResult.answersNotSelectedFalsely.hasValue(i)) {
+                checkboxes[i].checked = true;
+                checkboxes[i].currIcon = 2;
+              }
+            }
+
+            if (quiz.state == QuizState.CLOZETESTS) {
+
+            }
+          break;
+
+          case CLOZETESTS:
+            clozeResult = quiz.validateCloze();
+            for (int i = 0; i < inputs.size(); i++) {
+              inputs.get(i).isDisabled = true;
+              if (clozeResult.hasValue(i)) {
+                inputs.get(i).isCorrect = true;
+              } else {
+                inputs.get(i).isCorrect = false;
+              }
+            }
+
+            quiz.timer.pause();
+
+            buttonConfirm.hide();
+            buttonContinue.label = "Quiz beenden";
+            buttonContinue.show();
+          break;
         }
       }
     });
@@ -158,16 +241,18 @@ class SceneQuiz extends Scene {
   @Override
   void onKeyPressed() {
     super.onKeyPressed();
-    for (int i = 0; i < checkboxes.length; i++) {
-      if ((i == 0 && (key == 'a' || key == 'A')) ||
-          (i == 1 && (key == 'b' || key == 'B')) ||
-          (i == 2 && (key == 'c' || key == 'C'))) {
-        boolean checked = checkboxes[i].checked = ! checkboxes[i].checked;
-        if (checked) {
-          quiz.selectAnswer(i);
-        }
-        else {
-          quiz.deselectAnswer(i);
+    if (quiz.state == QuizState.QUESTIONS) {
+      for (int i = 0; i < checkboxes.length; i++) {
+        if ((i == 0 && (key == 'a' || key == 'A')) ||
+            (i == 1 && (key == 'b' || key == 'B')) ||
+            (i == 2 && (key == 'c' || key == 'C'))) {
+          boolean checked = checkboxes[i].checked = ! checkboxes[i].checked;
+          if (checked) {
+            quiz.selectAnswer(i);
+          }
+          else {
+            quiz.deselectAnswer(i);
+          }
         }
       }
     }
@@ -352,10 +437,10 @@ class SceneQuiz extends Scene {
       int currYPos = 504;
       for (int i = 0; i <= 2; i++) {
         if (quiz.answersConfirmed) {
-          if (result.answersSelectedCorrectly.hasValue(i)) {
+          if (questionResult.answersSelectedCorrectly.hasValue(i)) {
             fill(colAccentDark);
           }
-          else if (result.answersSelectedFalsely.hasValue(i)) {
+          else if (questionResult.answersSelectedFalsely.hasValue(i)) {
             fill(colRed);
           }
           else {
@@ -365,6 +450,21 @@ class SceneQuiz extends Scene {
         textExt(quiz.getCurrAnswer(i), 146, currYPos, 445, fontLeadBold);
         currYPos += 96;
       }
+
+      popStyle();
+    }
+
+    // Cloze Test specific Elements
+    if (quiz.state == QuizState.CLOZETESTS) {
+      // Render Text
+      pushStyle();
+
+      fill(colText);
+      textFont(fontLead);
+      textAlign(LEFT, TOP);
+      textLeading(52);
+
+      textCloze(quiz.getCurrClozeTextSnippets(), inputs, 32, 423, 560);
 
       popStyle();
     }

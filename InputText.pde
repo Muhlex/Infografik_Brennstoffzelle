@@ -2,9 +2,15 @@ class InputText extends Element {
 
   int size;
   String value;
-  boolean hasFocus;
+  InputTextCallback callback;
 
+  boolean hasFocus;
   boolean ignoreKeys;
+  boolean isDisabled;
+  boolean isCorrect;
+
+  int paddingX;
+  int paddingY;
 
   InputText(int x, int y, int size, InputTextCallback callback) {
     this(x, y, size, "", callback);
@@ -14,28 +20,42 @@ class InputText extends Element {
     this.y = y;
     this.size = size;
     this.value = initialValue;
+    this.callback = callback;
     this.hasFocus = false;
     this.ignoreKeys = false;
+    this.isDisabled = false;
+    this.isCorrect = false;
+    this.paddingX = 4;
+    this.paddingY = 4;
 
     pushStyle();
 
     this.setFontStyle();
-    this.w = int(getMaxLetterWidth() * size + (defaultStrokeWeight * 2));
-    this.h = int(g.textLeading);
+    this.w = int(getMaxLetterWidth() * size + (defaultStrokeWeight * 2) + (paddingX * 2));
+    this.h = int(g.textLeading) + (paddingY * 2);
     println("Height of Input: "+this.h);
 
     popStyle();
   }
 
   void setFontStyle() {
-    fill(colText);
+    if (isDisabled) {
+      if (isCorrect) {
+        fill(colAccentDark);
+      } else {
+        fill(colRed);
+      }
+    } else {
+      fill(colText);
+    }
+
     textFont(fontLead);
     textAlign(LEFT, TOP);
   }
 
   @Override
   void onClick(boolean insideElement) {
-    if (insideElement) {
+    if (insideElement && ! isDisabled) {
       hasFocus = true;
     }
     else {
@@ -45,6 +65,10 @@ class InputText extends Element {
 
   @Override
   void onKeyPressed() {
+
+    if (isDisabled) {
+      return;
+    }
 
     if (keyCode == CONTROL) {
       ignoreKeys = true;
@@ -63,12 +87,14 @@ class InputText extends Element {
         case BACKSPACE:
           if (value.length() > 0) {
             value = value.substring(0, value.length() - 1);
+            callback.onChange(value);
           }
         break;
 
         default:
           if (value.length() < size) {
             value += key;
+            callback.onChange(value);
           }
         break;
       }
@@ -113,7 +139,7 @@ class InputText extends Element {
 
     setFontStyle();
 
-    text(value, this.x + defaultStrokeWeight, this.y + defaultStrokeWeight);
+    text(value, this.x + defaultStrokeWeight + paddingX, this.y + defaultStrokeWeight + paddingY);
 
 
     popStyle();
@@ -123,6 +149,7 @@ class InputText extends Element {
       pushStyle();
 
       noFill();
+
       stroke(colPrimary);
       strokeWeight(2);
 
@@ -132,10 +159,10 @@ class InputText extends Element {
       popStyle();
 
       line(
-        cursorXPos,
-        this.y + defaultStrokeWeight + 2,
-        cursorXPos,
-        this.y + this.h - defaultStrokeWeight - 2
+        cursorXPos + 3,
+        this.y + defaultStrokeWeight + paddingX + 2,
+        cursorXPos + 3,
+        this.y + this.h - defaultStrokeWeight - paddingY - 2
       );
 
       popStyle();

@@ -1,19 +1,21 @@
 class Quiz {
 
   ArrayList<Question> questions;
-  //ArrayList<ClozeTest> clozeTests;
+  ArrayList<ClozeTest> clozeTests;
   QuizState state;
   boolean answersConfirmed;
   int currQuestion;
   IntList selectedAnswers;
+  StringList clozeAnswerValues;
   int score;
   int availableTime;
 
   ProcessingTimer timer;
-  QuizEndCallback endCallback;
+  QuizCallback endCallback;
 
-  Quiz(ArrayList<Question> questions, int availableTime, QuizEndCallback endCallback) {
+  Quiz(ArrayList<Question> questions, ArrayList<ClozeTest> clozeTests, int availableTime, QuizCallback endCallback) {
     this.questions = questions;
+    this.clozeTests = clozeTests;
     this.availableTime = availableTime;
     this.state = QuizState.INITIAL;
     this.currQuestion = 0;
@@ -25,21 +27,41 @@ class Quiz {
       @Override
       void expired() {
         state = QuizState.TIMEUP;
-        getEndCallback().onEnd(state);
+        getCallback().onEnd(state);
       }
     });
   }
 
-  QuizEndCallback getEndCallback() {
+  QuizCallback getCallback() {
     return endCallback;
   }
 
   String getCurrQuestion() {
-    return this.questions.get(currQuestion).questionTitle;
+    if (currQuestion < questions.size()) {
+      return this.questions.get(currQuestion).questionTitle;
+    }
+    return null;
   }
 
   String getCurrAnswer(int answer) {
-    return this.questions.get(currQuestion).answers.get(answer);
+    if (currQuestion < questions.size()) {
+      return this.questions.get(currQuestion).answers.get(answer);
+    }
+    return null;
+  }
+
+  StringList getCurrClozeTextSnippets() {
+    if (currQuestion >= questions.size()) {
+      return this.clozeTests.get(currQuestion - questions.size()).textSnippets;
+    }
+    return null;
+  }
+
+  StringList getCurrClozeSolutions() {
+    if (currQuestion >= questions.size()) {
+      return this.clozeTests.get(currQuestion - questions.size()).solutions;
+    }
+    return null;
   }
 
   void reset() {
@@ -74,9 +96,15 @@ class Quiz {
     return result;
   }
 
+  IntList validateCloze() {
+    IntList result = clozeTests.get(currQuestion - questions.size()).validate(clozeAnswerValues);
+    score += result.size() * 10;
+    return result;
+  }
+
   void endQuiz() {
     this.state = QuizState.DONE;
-    getEndCallback().onEnd(state);
+    getCallback().onEnd(state);
     timer.pause();
   }
 
@@ -88,20 +116,40 @@ class Quiz {
           answersConfirmed = false;
           selectedAnswers = new IntList();
         }
-        //else if (! clozeTests.isEmpty()) {
+        else if (! clozeTests.isEmpty()) {
+          this.state = QuizState.CLOZETESTS;
+          currQuestion++;
+          initializeClozeTest();
+          getCallback().onStartClozeTests();
+        }
         else {
-          println("start clozetests here");
           endQuiz();
         }
       break;
 
+      case CLOZETESTS:
+        if (currQuestion < questions.size() + clozeTests.size() - 1) {
+          currQuestion++;
 
+          initializeClozeTest();
+        } else {
+          endQuiz();
+        }
+      break;
+    }
+  }
+
+  void initializeClozeTest() {
+    clozeAnswerValues = new StringList();
+    for (int i = 0; i < clozeTests.get(currQuestion - questions.size()).solutions.size(); i++) {
+      clozeAnswerValues.append("");
     }
   }
 }
 
-interface QuizEndCallback {
+interface QuizCallback {
   void onEnd(QuizState reason);
+  void onStartClozeTests();
 }
 
 enum QuizState {
