@@ -1,7 +1,13 @@
 class SceneInfographics extends Scene {
 
+  // Easing Function Constants
+  final int EASEIN    = 0;
+  final int EASEOUT   = 1;
+  final int EASEINOUT = 2;
+
   PShape illustrationBG;
   PShape shapeH2;
+  PShape shapeElectron;
 
   float fadeTime = 0.05;
 
@@ -9,31 +15,49 @@ class SceneInfographics extends Scene {
     super();
 
     illustrationBG = loadShape("img/svg/infographics_bg.svg");
-    shapeH2 = loadShape("img/svg/movables/h2.svg");
+    shapeH2        = loadShape("img/svg/movables/h2.svg");
+    shapeElectron  = loadShape("img/svg/movables/electron.svg");
   }
 
-  void drawH2(float time) {
-    PVector posStart = new PVector(-18, 300);
-    PVector posEnd   = new PVector(183, 346);
-    float localStart = 0;
-    float localEnd   = 0.5;
+  void drawElement(float timestamp, PShape shape, PVector[] posKeyframes, float[] timeKeyframes, int easing) {
 
-    float scale = easeInOut(min(mapConstrainNormalize(time, localStart, localStart + fadeTime), 1.0 - mapConstrainNormalize(time, localEnd - fadeTime, localEnd)));
+    float scale = 1.0;
 
-    float normalizedTime  = mapConstrainNormalize(time, localStart, localEnd);
+    switch (easing) {
+      case EASEIN:
+        scale = easeInOut(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime));
+      break;
 
-    PVector pos = posStart.lerp(posEnd, easeInOut(normalizedTime));
+      case EASEOUT:
+        scale = easeInOut(1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1]));
+      break;
 
-    if (time >= localStart && time <= localEnd) {
+      case EASEINOUT:
+        scale = easeInOut(min(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime), 1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1])));
+      break;
+    }
+
+    PVector pos = new PVector();
+
+    for (int i = 0; i < timeKeyframes.length - 1; i++) {
+      if (timestamp > timeKeyframes[i] && timestamp <= timeKeyframes[i+1]) {
+
+        float lerpAmt = mapConstrainNormalize(timestamp, timeKeyframes[i], timeKeyframes[i+1]);
+        pos = posKeyframes[i].lerp(posKeyframes[i+1], easeInOut(lerpAmt));
+
+      }
+    }
+
+    if (timestamp >= timeKeyframes[0] && timestamp <= timeKeyframes[timeKeyframes.length-1]) {
       pushStyle();
 
       shapeMode(CENTER);
       shape(
-        shapeH2,
+        shape,
         pos.x,
         pos.y,
-        shapeH2.width * scale,
-        shapeH2.height * scale
+        shape.width * scale,
+        shape.height * scale
       );
 
       popStyle();
@@ -48,7 +72,36 @@ class SceneInfographics extends Scene {
 
     shape(illustrationBG, 197, 201, 646, 364);
 
-    float time = float(millis()) / 10000 % 1;
-    drawH2(time);
+    float timestamp = float(millis()) / 10000 % 1;
+
+    drawElement(
+      timestamp,
+      shapeH2,
+      new PVector[] {
+        new PVector(-54, 420),
+        new PVector(232, 420)
+      },
+      new float[] {
+        0.0,
+        0.6
+      },
+      EASEOUT
+    );
+
+    drawElement(
+      timestamp,
+      shapeElectron,
+      new PVector[] {
+        new PVector(210, 420),
+        new PVector(232, 203),
+        new PVector(808, 203)
+      },
+      new float[] {
+        0.5,
+        0.6,
+        1.0
+      },
+      EASEINOUT
+    );
   }
 }
