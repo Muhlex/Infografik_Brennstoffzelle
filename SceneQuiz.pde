@@ -41,6 +41,7 @@ class SceneQuiz extends Scene {
     // Load clozetest from file
     ArrayList<ClozeTest> clozeTests = new ArrayList<ClozeTest>();
     ClozeTest clozeTest;
+
     String[] clozetestsData = loadStrings("clozetest.txt");
 
     StringList textSnippets = new StringList();
@@ -49,9 +50,9 @@ class SceneQuiz extends Scene {
     for (int i = 0; i < clozetestsData.length; i += 2) {
 
       textSnippets.append(clozetestsData[i]);
-      try {
+      if (i+1 < clozetestsData.length) {
         solutions.append(clozetestsData[i+1]);
-      } catch (Exception e) {}
+      }
 
     }
     clozeTest = new ClozeTest(textSnippets, solutions);
