@@ -87,13 +87,17 @@ class SceneInfographics extends Scene {
     float secondsPerCycle = 20;
     float timestamp = millis() / (secondsPerCycle * 1000) % 1;
 
+    this.drawElements(timestamp);
+    this.drawElements((timestamp + 0.5) % 1);
+  }
+
+  void drawElements(float timestamp) {
     // Electron 1
     drawElement(
       timestamp,
       shapeElectron,
       new PVector[] {
         new PVector(210, 420),
-        //new PVector(210, 316),
         new PVector(232, 203),
         new PVector(808, 203),
         new PVector(806, 294),
@@ -101,8 +105,7 @@ class SceneInfographics extends Scene {
       },
       new float[] {
         0.1,
-        //0.18,
-        0.2,
+        0.27,
         0.52,
         0.68,
         0.7
@@ -116,7 +119,6 @@ class SceneInfographics extends Scene {
       shapeElectron,
       new PVector[] {
         new PVector(254, 420),
-        //new PVector(254, 356),
         new PVector(232, 203),
         new PVector(808, 203),
         new PVector(766, 294),
@@ -124,9 +126,8 @@ class SceneInfographics extends Scene {
       },
       new float[] {
         0.1,
-        //0.2,
-        0.32,
-        0.62,
+        0.395,
+        0.645,
         0.68,
         0.7
       },
@@ -140,8 +141,8 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(210, 420),
         new PVector(210, 484),
-        new PVector(210, 495),
-        new PVector(467, 490),
+        new PVector(448, 346),
+        new PVector(576, 346),
         new PVector(682, 390),
         new PVector(682, 390)
       },
@@ -149,8 +150,8 @@ class SceneInfographics extends Scene {
         0.1,
         0.2,
         0.4,
-        0.5,
-        0.88,
+        0.7,
+        0.85,
         0.9
       },
       EASEINOUT
@@ -163,17 +164,17 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(254, 420),
         new PVector(254, 524),
-        new PVector(254, 485),
-        new PVector(456, 346),
+        new PVector(448, 490),
+        new PVector(592, 490),
         new PVector(638, 390),
         new PVector(638, 390)
       },
       new float[] {
         0.1,
         0.2,
-        0.4,
         0.5,
-        0.88,
+        0.68,
+        0.85,
         0.9
       },
       EASEINOUT
@@ -191,7 +192,7 @@ class SceneInfographics extends Scene {
       new float[] {
         0.0,
         0.1,
-        0.15
+        0.132
       },
       EASEOUT
     );
@@ -259,7 +260,7 @@ class SceneInfographics extends Scene {
       new float[] {
         0.3,
         0.4,
-        0.45
+        0.432
       },
       EASEOUT
     );
@@ -274,12 +275,11 @@ class SceneInfographics extends Scene {
         new PVector(660, 647)
       },
       new float[] {
-        0.86,
-        0.9,
+        0.85,
+        0.88,
         1.0
       },
       EASEINOUT
     );
-
   }
 }
