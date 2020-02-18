@@ -52,7 +52,7 @@ class SceneInfographics extends Scene {
     PVector pos = new PVector();
 
     for (int i = 0; i < timeKeyframes.length - 1; i++) {
-      if (timestamp > timeKeyframes[i] && timestamp <= timeKeyframes[i+1]) {
+      if (timestamp >= timeKeyframes[i] && timestamp <= timeKeyframes[i+1]) {
 
         float lerpAmt = mapConstrainNormalize(timestamp, timeKeyframes[i], timeKeyframes[i+1]);
         pos = posKeyframes[i].lerp(posKeyframes[i+1], easeInOut(lerpAmt));
@@ -87,35 +87,24 @@ class SceneInfographics extends Scene {
     float secondsPerCycle = 20;
     float timestamp = millis() / (secondsPerCycle * 1000) % 1;
 
-    // H2
-    drawElement(
-      timestamp,
-      shapeH2,
-      new PVector[] {
-        new PVector(-54, 420),
-        new PVector(232, 420)
-      },
-      new float[] {
-        0.0,
-        0.2
-      },
-      EASEOUT
-    );
-
     // Electron 1
     drawElement(
       timestamp,
       shapeElectron,
       new PVector[] {
         new PVector(210, 420),
+        //new PVector(210, 316),
         new PVector(232, 203),
         new PVector(808, 203),
-        new PVector(786, 334)
+        new PVector(806, 294),
+        new PVector(806, 294)
       },
       new float[] {
+        0.1,
+        //0.18,
         0.2,
-        0.3,
-        0.6,
+        0.52,
+        0.68,
         0.7
       },
       EASEINOUT
@@ -127,15 +116,19 @@ class SceneInfographics extends Scene {
       shapeElectron,
       new PVector[] {
         new PVector(254, 420),
+        //new PVector(254, 356),
         new PVector(232, 203),
         new PVector(808, 203),
-        new PVector(786, 334)
+        new PVector(766, 294),
+        new PVector(766, 294)
       },
       new float[] {
-        0.2,
-        0.4,
-        0.7,
-        0.8
+        0.1,
+        //0.2,
+        0.32,
+        0.62,
+        0.68,
+        0.7
       },
       EASEINOUT
     );
@@ -146,14 +139,18 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(210, 420),
-        new PVector(210, 485),
+        new PVector(210, 484),
+        new PVector(210, 495),
         new PVector(467, 490),
-        new PVector(696, 448)
+        new PVector(682, 390),
+        new PVector(682, 390)
       },
       new float[] {
+        0.1,
         0.2,
         0.4,
         0.5,
+        0.88,
         0.9
       },
       EASEINOUT
@@ -165,30 +162,36 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(254, 420),
+        new PVector(254, 524),
         new PVector(254, 485),
         new PVector(456, 346),
-        new PVector(696, 448)
+        new PVector(638, 390),
+        new PVector(638, 390)
       },
       new float[] {
+        0.1,
         0.2,
         0.4,
         0.5,
+        0.88,
         0.9
       },
       EASEINOUT
     );
 
-    // O2
+    // H2
     drawElement(
       timestamp,
-      shapeO2,
+      shapeH2,
       new PVector[] {
-        new PVector(1094, 394),
-        new PVector(808,  394)
+        new PVector(-54, 420),
+        new PVector(232, 420),
+        new PVector(232, 420)
       },
       new float[] {
-        0.5,
-        0.6
+        0.0,
+        0.1,
+        0.15
       },
       EASEOUT
     );
@@ -199,13 +202,15 @@ class SceneInfographics extends Scene {
       shapeO,
       new PVector[] {
         new PVector(786, 394),
-        new PVector(786, 334)
+        new PVector(786, 316),
+        new PVector(786, 316)
       },
       new float[] {
-        0.6,
-        0.7
+        0.4,
+        0.5,
+        0.685
       },
-      EASEINOUT
+      EASEIN
     );
 
     // O (single) 2
@@ -217,25 +222,46 @@ class SceneInfographics extends Scene {
         new PVector(930, 345)
       },
       new float[] {
-        0.6,
-        0.7
+        0.4,
+        0.55
       },
       EASEINOUT
     );
 
-    // O2 Minus w/ Electrons
+    // O2-Minus w/ Electrons
     drawElement(
       timestamp,
       shapeO2MinusWElectrons,
       new PVector[] {
-        new PVector(788, 329),
-        new PVector(697, 443)
+        new PVector(786, 311),
+        new PVector(786, 311),
+        new PVector(660, 377),
+        new PVector(660, 377)
       },
       new float[] {
+        0.685,
+        0.7,
         0.8,
         0.9
       },
-      EASEINOUT
+      EASEOUT
+    );
+
+    // O2
+    drawElement(
+      timestamp,
+      shapeO2,
+      new PVector[] {
+        new PVector(1094, 394),
+        new PVector(808,  394),
+        new PVector(808,  394)
+      },
+      new float[] {
+        0.3,
+        0.4,
+        0.45
+      },
+      EASEOUT
     );
 
     // H2O
@@ -243,10 +269,12 @@ class SceneInfographics extends Scene {
       timestamp,
       shapeH2O,
       new PVector[] {
-        new PVector(697, 414),
-        new PVector(697, 647)
+        new PVector(660, 371),
+        new PVector(660, 371),
+        new PVector(660, 647)
       },
       new float[] {
+        0.86,
         0.9,
         1.0
       },
