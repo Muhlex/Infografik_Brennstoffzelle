@@ -7,6 +7,8 @@ class SceneInfographics extends Scene {
   final int EASEINOUT = 3;
 
   PShape illustrationBG;
+  PShape lightbulbOff;
+  PShape lightbulbOn;
 
   PShape shapeH2;
   PShape shapeElectron;
@@ -26,6 +28,8 @@ class SceneInfographics extends Scene {
     fadeTime = 0.03;
 
     illustrationBG         = loadShape("img/svg/infographics_bg.svg");
+    lightbulbOff           = loadShape("img/svg/bulb.svg");
+    lightbulbOn            = loadShape("img/svg/bulb_lit.svg");
     shapeH2                = loadShape("img/svg/movables/h2.svg");
     shapeElectron          = loadShape("img/svg/movables/electron.svg");
     shapeHPlus             = loadShape("img/svg/movables/h_plus.svg");
@@ -37,12 +41,14 @@ class SceneInfographics extends Scene {
 
   @Override
   void onKeyPressed() {
-    if (key == 'm' || key == 'M') {
+    if (key == 'm') {
       debugSKIP += 100;
+    } else if (key == 'M') {
+      debugSKIP += 400;
     }
   }
 
-  void drawElement(float timestamp, PShape shape, PVector[] posKeyframes, float[] timeKeyframes, int easing) {
+  void drawMoveable(float timestamp, PShape shape, PVector[] posKeyframes, float[] timeKeyframes, int easing) {
 
     float scale = 1.0;
 
@@ -95,17 +101,17 @@ class SceneInfographics extends Scene {
 
     shape(illustrationBG, 197, 201, 646, 364);
 
-    float secondsPerCycle = 30; //* 4;
+    float secondsPerCycle = 30;
     float timestamp = (debugSKIP + millis()) / (secondsPerCycle * 1000) % 1;
 
-    this.drawElements(timestamp);
-    this.drawElements((timestamp + 0.66) % 1);
-    this.drawElements((timestamp + 0.66 * 2) % 1);
+    this.drawMoveables(timestamp);
+    this.drawMoveables((timestamp + 0.66) % 1);
+    this.drawMoveables((timestamp + 0.66 * 2) % 1);
   }
 
-  void drawElements(float timestamp) {
+  void drawMoveables(float timestamp) {
     // Electron 1
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeElectron,
       new PVector[] {
@@ -116,7 +122,7 @@ class SceneInfographics extends Scene {
         new PVector(806, 294)
       },
       new float[] {
-        0.06,
+        0.055,
         0.18,
         0.34,
         0.45,
@@ -126,7 +132,7 @@ class SceneInfographics extends Scene {
     );
 
     // Electron 2
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeElectron,
       new PVector[] {
@@ -137,7 +143,7 @@ class SceneInfographics extends Scene {
         new PVector(766, 294)
       },
       new float[] {
-        0.06,
+        0.055,
         0.26,
         0.42,
         0.45,
@@ -147,49 +153,49 @@ class SceneInfographics extends Scene {
     );
 
     // Electron 3
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeElectron,
       new PVector[] {
         new PVector(210, 420),
         new PVector(232, 203),
         new PVector(808, 203),
-        new PVector(806, 294),
-        new PVector(806, 294)
+        new PVector(850, 294),
+        new PVector(850, 294)
       },
       new float[] {
-        0.22,
+        0.215,
         0.34,
         0.50,
         0.61,
-        0.62
+        0.625
       },
       EASEINOUT
     );
 
     // Electron 4
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeElectron,
       new PVector[] {
         new PVector(254, 420),
         new PVector(232, 203),
         new PVector(808, 203),
-        new PVector(766, 294),
-        new PVector(766, 294)
+        new PVector(810, 294),
+        new PVector(810, 294)
       },
       new float[] {
-        0.22,
+        0.215,
         0.42,
         0.58,
         0.61,
-        0.62
+        0.625
       },
       EASEINOUT
     );
 
     // H-Plus 1
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeHPlus,
       new PVector[] {
@@ -197,11 +203,11 @@ class SceneInfographics extends Scene {
         new PVector(268, 482),
         new PVector(448, 346),
         new PVector(576, 346),
-        new PVector(682, 390),
-        new PVector(682, 390)
+        new PVector(701, 468),
+        new PVector(701, 468)
       },
       new float[] {
-        0.06,
+        0.055,
         0.13,
         0.26,
         0.46,
@@ -212,7 +218,7 @@ class SceneInfographics extends Scene {
     );
 
     // H-Plus 2
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeHPlus,
       new PVector[] {
@@ -220,11 +226,11 @@ class SceneInfographics extends Scene {
         new PVector(325, 530),
         new PVector(448, 490),
         new PVector(592, 490),
-        new PVector(638, 390),
-        new PVector(638, 390)
+        new PVector(657, 468),
+        new PVector(657, 468)
       },
       new float[] {
-        0.06,
+        0.055,
         0.13,
         0.33,
         0.45,
@@ -234,8 +240,54 @@ class SceneInfographics extends Scene {
       EASEINOUT
     );
 
+    // H-Plus 3
+    drawMoveable(
+      timestamp,
+      shapeHPlus,
+      new PVector[] {
+        new PVector(210, 420),
+        new PVector(268, 482),
+        new PVector(448, 346),
+        new PVector(576, 346),
+        new PVector(701, 468),
+        new PVector(701, 468)
+      },
+      new float[] {
+        0.215,
+        0.29,
+        0.42,
+        0.62,
+        0.72,
+        0.76
+      },
+      EASEINOUT
+    );
+
+    // H-Plus 4
+    drawMoveable(
+      timestamp,
+      shapeHPlus,
+      new PVector[] {
+        new PVector(254, 420),
+        new PVector(325, 530),
+        new PVector(448, 490),
+        new PVector(592, 490),
+        new PVector(657, 468),
+        new PVector(657, 468)
+      },
+      new float[] {
+        0.215,
+        0.29,
+        0.49,
+        0.61,
+        0.72,
+        0.76
+      },
+      EASEINOUT
+    );
+
     // H2 1
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeH2,
       new PVector[] {
@@ -252,7 +304,7 @@ class SceneInfographics extends Scene {
     );
 
     // H2 2
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeH2,
       new PVector[] {
@@ -269,7 +321,7 @@ class SceneInfographics extends Scene {
     );
 
     // O (single) 1
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeO,
       new PVector[] {
@@ -279,40 +331,42 @@ class SceneInfographics extends Scene {
         new PVector(786, 316)
       },
       new float[] {
-        0.26,
-        0.28,
-        0.33,
+        0.255,
+        0.27,
+        0.4,
         0.45
       },
-      NONE
+      EASEIN
     );
 
     // O (single) 2
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeO,
       new PVector[] {
         new PVector(830, 454),
         new PVector(830, 454),
-        new PVector(830, 376)
+        new PVector(830, 316),
+        new PVector(830, 316)
       },
       new float[] {
-        0.26,
-        0.28,
-        0.36
+        0.255,
+        0.27,
+        0.56,
+        0.61,
       },
-      EASEOUT
+      EASEIN
     );
 
-    // O2-Minus w/ Electrons
-    drawElement(
+    // O2-Minus w/ Electrons 1
+    drawMoveable(
       timestamp,
       shapeO2MinusWElectrons,
       new PVector[] {
         new PVector(786, 311),
         new PVector(786, 311),
-        new PVector(660, 377),
-        new PVector(660, 377)
+        new PVector(679, 455),
+        new PVector(679, 455)
       },
       new float[] {
         0.45,
@@ -323,8 +377,27 @@ class SceneInfographics extends Scene {
       EASEOUT
     );
 
+    // O2-Minus w/ Electrons 2
+    drawMoveable(
+      timestamp,
+      shapeO2MinusWElectrons,
+      new PVector[] {
+        new PVector(830, 311),
+        new PVector(830, 311),
+        new PVector(679, 455),
+        new PVector(679, 455)
+      },
+      new float[] {
+        0.61,
+        0.62,
+        0.69,
+        0.76
+      },
+      EASEOUT
+    );
+
     // O2
-    drawElement(
+    drawMoveable(
       timestamp,
       shapeO2,
       new PVector[] {
@@ -340,19 +413,36 @@ class SceneInfographics extends Scene {
       EASEOUT
     );
 
-    // H2O
-    drawElement(
+    // H2O 1
+    drawMoveable(
       timestamp,
       shapeH2O,
       new PVector[] {
-        new PVector(660, 371),
-        new PVector(660, 371),
-        new PVector(660, 647)
+        new PVector(679, 449),
+        new PVector(679, 449),
+        new PVector(679, 647)
       },
       new float[] {
         0.56,
         0.58,
         0.66
+      },
+      EASEINOUT
+    );
+
+    // H2O 2
+    drawMoveable(
+      timestamp,
+      shapeH2O,
+      new PVector[] {
+        new PVector(679, 449),
+        new PVector(679, 449),
+        new PVector(679, 647)
+      },
+      new float[] {
+        0.72,
+        0.74,
+        0.82
       },
       EASEINOUT
     );
