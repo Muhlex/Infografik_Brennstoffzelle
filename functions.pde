@@ -166,3 +166,11 @@ float getMaxLetterWidth() {
 
   return highestWidth;
 }
+
+float easeInOut(float value) {
+  return value * value * (3 - 2 * value);
+}
+
+float mapConstrainNormalize(float value, float min, float max) {
+  return map(constrain(value, min, max), min, max, 0, 1);
+}
