@@ -3,6 +3,7 @@ boolean isMouseInsideRect(float x1, float y1, float x2, float y2) {
          (mouseY >= y1 && mouseY <= y2);
 }
 
+// Display Text with a highlight Font. Every word preceded by "\b" apprears in this font
 void textExt(String text, float x, float y) {
   textExt(text, x, y, width, null);
 }
@@ -80,20 +81,22 @@ ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, fl
       currXPos += widthWord + textWidth(" ");
     }
 
-    InputText newInput = new InputText(int(currXPos), int(currYPos - 8), solutions.get(i).length() + 2, null);
+    if (solutions.size() > i) {
+      InputText newInput = new InputText(int(currXPos), int(currYPos - 8), solutions.get(i).length() + 2, null);
 
-    // Check if new Input is too wide for the current line. If so, move it
-    if (newInput.w > w - currXPos) {
-      currYPos += lineHeightPx;
-      currXPos = x;
+      // Check if new Input is too wide for the current line. If so, move it
+      if (newInput.w > w - currXPos) {
+        currYPos += lineHeightPx;
+        currXPos = x;
 
-      newInput.x = int(currXPos);
-      newInput.y = int(currYPos);
+        newInput.x = int(currXPos);
+        newInput.y = int(currYPos);
+      }
+
+      inputs.add(newInput);
+
+      currXPos += newInput.w + textWidth(" ");
     }
-
-    inputs.add(newInput);
-
-    currXPos += newInput.w + textWidth(" ");
   }
   return inputs;
 }
@@ -121,13 +124,15 @@ void textCloze(StringList textSnippets, ArrayList<InputText> inputs, float x, fl
       currXPos += widthWord + textWidth(" ");
     }
 
-    // Check if input width is too big for the current line
-    if (inputs.get(i).w > w - currXPos) {
-      currYPos += lineHeightPx;
-      currXPos = x;
-    }
+    if (inputs.size() > i) {
+      // Check if input width is too big for the current line
+      if (inputs.get(i).w > w - currXPos) {
+        currYPos += lineHeightPx;
+        currXPos = x;
+      }
 
-    currXPos += inputs.get(i).w + textWidth(" ");
+      currXPos += inputs.get(i).w + textWidth(" ");
+    }
   }
 }
 

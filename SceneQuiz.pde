@@ -18,41 +18,43 @@ class SceneQuiz extends Scene {
 
     // Initialize Quiz
 
+    // Load questions from file
     ArrayList<Question> questions = new ArrayList<Question>();
-    String questionTitle;
-    StringList answers = new StringList();
-    IntList solutions = new IntList();
+    String[] questionsData = loadStrings("questions.txt");
 
-    questionTitle = "Ist die richtige Antwort B?";
-    answers.append("Nein es ist A.\n\bGlaube \bich.");
-    answers.append("Ja genau.");
-    answers.append("Keine Ahnung.");
-    solutions.append(1);
+    for (int i = 0; i < questionsData.length; i += 3) {
+      String questionTitle;
+      StringList answers = new StringList();
+      IntList solutions = new IntList();
 
-    questions.add(new Question(questionTitle, answers, solutions));
+      questionTitle = questionsData[i];
 
-    answers = new StringList();
-    solutions = new IntList();
+      answers.append(questionsData[i+1].split(";"));
 
-    questionTitle = "Magst du Schokoeis?";
-    answers.append("Natürlich, das schmeckt super.");
-    answers.append("Auf jeden Fall, einfach klasse.");
-    answers.append("Ne.");
-    solutions.append(0);
-    solutions.append(1);
+      for (String solution : questionsData[i+2].split(";")) {
+        solutions.append(int(solution));
+      }
 
-    questions.add(new Question(questionTitle, answers, solutions));
+      questions.add(new Question(questionTitle, answers, solutions));
+    }
 
+    // Load clozetest from file
     ArrayList<ClozeTest> clozeTests = new ArrayList<ClozeTest>();
-    StringList clozeTextSnippets = new StringList();
-    StringList clozeSolutions = new StringList();
+    ClozeTest clozeTest;
+    String[] clozetestsData = loadStrings("clozetest.txt");
 
-    clozeTextSnippets.append("Das ist der Text vor der ersten");
-    clozeSolutions.append("Lücke");
-    clozeTextSnippets.append("Danach kommt noch ein Stück");
-    clozeSolutions.append("Text");
+    StringList textSnippets = new StringList();
+    StringList solutions    = new StringList();
 
-    ClozeTest clozeTest = new ClozeTest(clozeTextSnippets, clozeSolutions);
+    for (int i = 0; i < clozetestsData.length; i += 2) {
+
+      textSnippets.append(clozetestsData[i]);
+      try {
+        solutions.append(clozetestsData[i+1]);
+      } catch (Exception e) {}
+
+    }
+    clozeTest = new ClozeTest(textSnippets, solutions);
     clozeTests.add(clozeTest);
 
     pushStyle();
@@ -241,20 +243,51 @@ class SceneQuiz extends Scene {
   @Override
   void onKeyPressed() {
     super.onKeyPressed();
-    if (quiz.state == QuizState.QUESTIONS) {
-      for (int i = 0; i < checkboxes.length; i++) {
-        if ((i == 0 && (key == 'a' || key == 'A')) ||
-            (i == 1 && (key == 'b' || key == 'B')) ||
-            (i == 2 && (key == 'c' || key == 'C'))) {
-          boolean checked = checkboxes[i].checked = ! checkboxes[i].checked;
-          if (checked) {
-            quiz.selectAnswer(i);
-          }
-          else {
-            quiz.deselectAnswer(i);
+    switch (quiz.state) {
+      case QUESTIONS:
+        // Allow user to tick A, B, C via Keyboard
+        for (int i = 0; i < checkboxes.length; i++) {
+          if ((i == 0 && (key == 'a' || key == 'A')) ||
+              (i == 1 && (key == 'b' || key == 'B')) ||
+              (i == 2 && (key == 'c' || key == 'C'))) {
+            boolean checked = checkboxes[i].checked = ! checkboxes[i].checked;
+            if (checked) {
+              quiz.selectAnswer(i);
+            }
+            else {
+              quiz.deselectAnswer(i);
+            }
           }
         }
-      }
+      break;
+
+      case CLOZETESTS:
+        // Allow user to use TAB to switch focused input field
+        if (key == TAB) {
+          boolean focusNextInput = false;
+          for (int i = 0; i < inputs.size(); i++) {
+            if (focusNextInput) {
+              inputs.get(i).hasFocus = true;
+              break;
+            }
+            else if (inputs.get(i).hasFocus) {
+              inputs.get(i).hasFocus = false;
+              // If not last input
+              if (i < inputs.size() - 1) {
+                focusNextInput = true;
+              }
+              else {
+                // Focus first one again
+                inputs.get(0).hasFocus = true;
+              }
+            }
+          }
+          // Focus first one if none was focused
+          if ( ! focusNextInput) {
+            inputs.get(0).hasFocus = true;
+          }
+        }
+      break;
     }
   }
 

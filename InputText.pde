@@ -33,7 +33,6 @@ class InputText extends Element {
     this.setFontStyle();
     this.w = int(getMaxLetterWidth() * size + (defaultStrokeWeight * 2) + (paddingX * 2));
     this.h = int(g.textLeading) + (paddingY * 2);
-    println("Height of Input: "+this.h);
 
     popStyle();
   }

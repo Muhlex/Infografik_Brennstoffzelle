@@ -1,0 +1,6 @@
+Ist die Richtige Antwort B?
+Nein es ist A.;Ja genau.;Keine Ahnung.
+1
+Magst du Schokoeis?
+Natürlich, das schmeckt super.;Auf jeden Fall, einfach klasse.;Ne.
+0;1
