@@ -14,6 +14,7 @@ void textExt(String text, float x, float y, float w) {
 void textExt(String text, float x, float y, float w, PFont highlightFont) {
   float currXPos = x;
   float currYPos = y;
+  float x2 = x + w;
   float lineHeightPx = g.textLeading;
   String paragraphs[] = text.split("\n");
 
@@ -35,7 +36,7 @@ void textExt(String text, float x, float y, float w, PFont highlightFont) {
       float widthWord = textWidth(word);
 
       // Word has no space in current line
-      if (widthWord > w - currXPos) {
+      if (widthWord > x2 - currXPos) {
         currYPos += lineHeightPx;
         currXPos = x;
       }
@@ -58,6 +59,7 @@ void textExt(String text, float x, float y, float w, PFont highlightFont) {
 ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, float w) {
   float currXPos = x;
   float currYPos = y;
+  float x2 = x + w;
   float lineHeightPx = g.textLeading;
 
   StringList textSnippets = clozeTest.textSnippets;
@@ -73,7 +75,7 @@ ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, fl
       float widthWord = textWidth(word);
 
       // Word has no space in current line
-      if (widthWord > w - currXPos) {
+      if (widthWord > x2 - currXPos) {
         currYPos += lineHeightPx;
         currXPos = x;
       }
@@ -85,7 +87,7 @@ ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, fl
       InputText newInput = new InputText(int(currXPos), int(currYPos - 8), solutions.get(i).length() + 2, null);
 
       // Check if new Input is too wide for the current line. If so, move it
-      if (newInput.w > w - currXPos) {
+      if (newInput.w > x2 - currXPos) {
         currYPos += lineHeightPx;
         currXPos = x;
 
@@ -104,6 +106,7 @@ ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, fl
 void textCloze(StringList textSnippets, ArrayList<InputText> inputs, float x, float y, float w) {
   float currXPos = x;
   float currYPos = y;
+  float x2 = x + w;
   float lineHeightPx = g.textLeading;
 
   for (int i = 0; i < textSnippets.size(); i++) {
@@ -114,7 +117,7 @@ void textCloze(StringList textSnippets, ArrayList<InputText> inputs, float x, fl
       float widthWord = textWidth(word);
 
       // Word has no space in current line
-      if (widthWord > w - currXPos) {
+      if (widthWord > x2 - currXPos) {
         currYPos += lineHeightPx;
         currXPos = x;
       }
@@ -126,7 +129,7 @@ void textCloze(StringList textSnippets, ArrayList<InputText> inputs, float x, fl
 
     if (inputs.size() > i) {
       // Check if input width is too big for the current line
-      if (inputs.get(i).w > w - currXPos) {
+      if (inputs.get(i).w > x2 - currXPos) {
         currYPos += lineHeightPx;
         currXPos = x;
       }
