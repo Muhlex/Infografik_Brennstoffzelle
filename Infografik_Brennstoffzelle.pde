@@ -1,6 +1,7 @@
 import java.util.*;
 
 int currentScene = 0;
+int currStep = 0;
 Scene[] scenes = new Scene[3];
 
 PFont fontTitle;

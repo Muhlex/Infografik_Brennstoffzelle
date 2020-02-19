@@ -18,9 +18,12 @@ class SceneInfographics extends Scene {
   PShape shapeO2MinusWElectrons;
   PShape shapeH2O;
 
+  ButtonStep prevButton;
+  ButtonStep nextButton;
+
   float fadeTime;
 
-  int currStep;
+  String[] stepDescriptions;
   Area[] stepHighlightBounds;
 
   float debugSKIP = 0;
@@ -41,9 +44,43 @@ class SceneInfographics extends Scene {
 
     fadeTime = 0.03;
     currStep = 0;
+
+    stepDescriptions = new String[] {
+      "Die Brennstoffzelle besteht grundlegend aus zwei \bElektroden (Anode und Kathode). " +
+      "Das sind miteinander verbundene, elektrische Leiter. " +
+      "Zwischen den Elektroden befindet sich eine sogenannte \bElektrolytmembran.",
+
+      "Zuerst wird \bWasserstoff in die Brennstoffzelle geleitet. Dieser wird auf der Anodenseite \boxidiert." +
+      "Das heißt, ihm werden negativ geladene \bElektronen entzogen. " +
+      "Übrig bleiben positive \bWasserstoffionen – auch \bProtonen genannt.",
+
+      "Die \bElektronen fließen über einen Leiter zur Kathode. " +
+      "Dabei entsteht \belektrische \bSpannung, also Strom.",
+
+      "Zeitgleich diffundieren die Wasserstoffionen \b(Protonen) durch die Elektrolytmembran in Richtung Kathode. " +
+      "Die Membran ist \bnur \bfür \bProtonen \bdurchlässig, weshalb die Elektronen den äußeren Stromkreis durchlaufen.",
+
+      "An der Kathode angekommen, vereinen sich die Elektronen mit \bSauerstoffmolekülen, die durch einen Luftstrom zugeführt werden, zu \bSauerstoffionen. " +
+      "Dies nennt man \bReduktion.",
+
+      "Die Sauerstoffionen treffen anschließend auf die Protonen und reagieren zu \bWasser. " +
+      "Die einzige \bEmission einer Brennstoffzelle ist somit H2O."
+    };
+
     stepHighlightBounds = new Area[] {
+      null, // First step does not have any moving elements
+      new Area(-20, 254, 332, 554),
+      new Area(300, 148, 850, 240),
+      new Area(300, 148, 850, 240),
+      new Area(300, 148, 850, 240),
+      new Area(300, 148, 850, 240),
       new Area(300, 148, 850, 240)
     };
+
+    prevButton = new ButtonStep(0,   604, 106, 176, -1, stepDescriptions.length-1);
+    nextButton = new ButtonStep(934, 604, 106, 176,  1, stepDescriptions.length-1);
+    elements.add(prevButton);
+    elements.add(nextButton);
   }
 
   @Override
@@ -87,9 +124,11 @@ class SceneInfographics extends Scene {
       break;
     }
 
-    float highlightOpacity = 1.0;
+    float highlightOpacity = 0.0;
 
     if (highlightBounds != null) {
+
+      highlightOpacity = 1.0;
 
       FloatList distancesToEdges = new FloatList();
       if (pos.x >= highlightBounds.x1) {distancesToEdges.append(pos.x - highlightBounds.x1); }
@@ -98,8 +137,8 @@ class SceneInfographics extends Scene {
       if (pos.y <= highlightBounds.y2) {distancesToEdges.append(highlightBounds.y2 - pos.y); }
 
       // If is inside highlightBounds and between 0 and 25px from any edge
-      if (distancesToEdges.size() >= 4 && distancesToEdges.min() <= 25) {
-        highlightOpacity = easeInOut(map(distancesToEdges.min(), 0, 25, 0, 1));
+      if (distancesToEdges.size() >= 4 && distancesToEdges.min() <= 20) {
+        highlightOpacity = easeInOut(map(distancesToEdges.min(), 0, 20, 0, 1));
       }
       // If not inside highlightBounds
       else if (distancesToEdges.size() < 4) {
@@ -148,25 +187,45 @@ class SceneInfographics extends Scene {
 
   @Override
   void draw() {
-    super.draw();
-
     // STATIC ELEMENTS (these do not get pushed into the elements ArrayList)
 
     shape(illustrationBG, 197, 201, 646, 364);
 
-    float secondsPerCycle = 30;
+    float secondsPerCycle = 40;
     float timestamp = (debugSKIP + millis()) / (secondsPerCycle * 1000) % 1;
 
-    if (timestamp * 12 % 1 > 0.5) {
+    if (currStep == 0) {
       shape(lightbulbOff, 484, 97);
     }
     else {
-      shape(lightbulbOn, 484, 97);
+
+      if (timestamp * 12 % 1 > 0.25) {
+        shape(lightbulbOff, 484, 97);
+      }
+      else {
+        shape(lightbulbOn, 484, 97);
+      }
+
+      this.drawMoveables(timestamp);
+      this.drawMoveables((timestamp + (2 / 3.0)) % 1);
+      this.drawMoveables((timestamp + (2 / 3.0) * 2) % 1);
     }
 
-    this.drawMoveables(timestamp);
-    this.drawMoveables((timestamp + (2 / 3.0)) % 1);
-    this.drawMoveables((timestamp + (2 / 3.0) * 2) % 1);
+    // Background for lower panel
+    rect(0, 604, width, 176);
+
+    pushStyle();
+
+    fill(colBright);
+    textFont(fontBody);
+    textAlign(LEFT, TOP);
+    textLeading(fontBodySize * defaultLineHeight);
+
+    textExt(stepDescriptions[currStep], 368, 628, 512, fontBodyBold);
+
+    popStyle();
+
+    super.draw();
   }
 
   void drawMoveables(float timestamp) {
@@ -189,7 +248,7 @@ class SceneInfographics extends Scene {
         0.465
       },
       EASEINOUT,
-      stepHighlightBounds[0]
+      stepHighlightBounds[currStep]
     );
 
     // Electron 2
@@ -211,7 +270,7 @@ class SceneInfographics extends Scene {
         0.465
       },
       EASEINOUT,
-      stepHighlightBounds[0]
+      stepHighlightBounds[currStep]
     );
 
     // Electron 3
@@ -233,7 +292,7 @@ class SceneInfographics extends Scene {
         0.625
       },
       EASEINOUT,
-      stepHighlightBounds[0]
+      stepHighlightBounds[currStep]
     );
 
     // Electron 4
@@ -255,7 +314,7 @@ class SceneInfographics extends Scene {
         0.625
       },
       EASEINOUT,
-      stepHighlightBounds[0]
+      stepHighlightBounds[currStep]
     );
 
     // H-Plus 1
@@ -278,7 +337,8 @@ class SceneInfographics extends Scene {
         0.56,
         0.6
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H-Plus 2
@@ -301,7 +361,8 @@ class SceneInfographics extends Scene {
         0.56,
         0.6
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H-Plus 3
@@ -324,7 +385,8 @@ class SceneInfographics extends Scene {
         0.72,
         0.76
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H-Plus 4
@@ -347,7 +409,8 @@ class SceneInfographics extends Scene {
         0.72,
         0.76
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H2 1
@@ -364,7 +427,8 @@ class SceneInfographics extends Scene {
         0.06,
         0.09
       },
-      EASEOUT
+      EASEOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H2 2
@@ -381,7 +445,8 @@ class SceneInfographics extends Scene {
         0.22,
         0.25
       },
-      EASEOUT
+      EASEOUT,
+      stepHighlightBounds[currStep]
     );
 
     // O (single) 1
@@ -400,7 +465,8 @@ class SceneInfographics extends Scene {
         0.4,
         0.45
       },
-      EASEIN
+      EASEIN,
+      stepHighlightBounds[currStep]
     );
 
     // O (single) 2
@@ -419,7 +485,8 @@ class SceneInfographics extends Scene {
         0.56,
         0.61,
       },
-      EASEIN
+      EASEIN,
+      stepHighlightBounds[currStep]
     );
 
     // O2-Minus w/ Electrons 1
@@ -438,7 +505,8 @@ class SceneInfographics extends Scene {
         0.53,
         0.6
       },
-      EASEOUT
+      EASEOUT,
+      stepHighlightBounds[currStep]
     );
 
     // O2-Minus w/ Electrons 2
@@ -457,7 +525,8 @@ class SceneInfographics extends Scene {
         0.69,
         0.76
       },
-      EASEOUT
+      EASEOUT,
+      stepHighlightBounds[currStep]
     );
 
     // O2
@@ -474,7 +543,8 @@ class SceneInfographics extends Scene {
         0.26,
         0.29
       },
-      EASEOUT
+      EASEOUT,
+      stepHighlightBounds[currStep]
     );
 
     // H2O 1
@@ -491,7 +561,8 @@ class SceneInfographics extends Scene {
         0.58,
         0.66
       },
-      EASEIN
+      EASEIN,
+      stepHighlightBounds[currStep]
     );
 
     // H2O 2
@@ -508,7 +579,8 @@ class SceneInfographics extends Scene {
         0.74,
         0.82
       },
-      EASEIN
+      EASEIN,
+      stepHighlightBounds[currStep]
     );
   }
 }
