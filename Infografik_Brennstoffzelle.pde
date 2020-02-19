@@ -56,7 +56,7 @@ void setup() {
   scenes[2] = new SceneQuiz();
 
   // Use 0 to 1 Alpha instead of 0 to 255
-  //colorMode(RGB, 255, 255, 255, 1);
+  colorMode(RGB, 255, 255, 255, 1);
 
   // Default styles
   noStroke();

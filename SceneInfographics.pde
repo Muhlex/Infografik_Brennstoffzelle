@@ -20,12 +20,13 @@ class SceneInfographics extends Scene {
 
   float fadeTime;
 
+  int currStep;
+  Area[] stepHighlightBounds;
+
   float debugSKIP = 0;
 
   SceneInfographics() {
     super();
-
-    fadeTime = 0.03;
 
     illustrationBG         = loadShape("img/svg/infographics_bg.svg");
     lightbulbOff           = loadShape("img/svg/bulb.svg");
@@ -37,6 +38,12 @@ class SceneInfographics extends Scene {
     shapeO                 = loadShape("img/svg/movables/o.svg");
     shapeO2MinusWElectrons = loadShape("img/svg/movables/o2_minus_w_electrons.svg");
     shapeH2O               = loadShape("img/svg/movables/h2o.svg");
+
+    fadeTime = 0.03;
+    currStep = 0;
+    stepHighlightBounds = new Area[] {
+      new Area(300, 148, 850, 240)
+    };
   }
 
   @Override
@@ -44,27 +51,14 @@ class SceneInfographics extends Scene {
     if (key == 'm') {
       debugSKIP += 100;
     } else if (key == 'M') {
-      debugSKIP += 400;
+      debugSKIP += 600;
     }
   }
 
   void drawMoveable(float timestamp, PShape shape, PVector[] posKeyframes, float[] timeKeyframes, int easing) {
-
-    float scale = 1.0;
-
-    switch (easing) {
-      case EASEIN:
-        scale = easeInOut(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime));
-      break;
-
-      case EASEOUT:
-        scale = easeInOut(1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1]));
-      break;
-
-      case EASEINOUT:
-        scale = easeInOut(min(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime), 1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1])));
-      break;
-    }
+    drawMoveable(timestamp, shape, posKeyframes, timeKeyframes, easing, null);
+  }
+  void drawMoveable(float timestamp, PShape shape, PVector[] posKeyframes, float[] timeKeyframes, int easing, Area highlightBounds) {
 
     PVector pos = new PVector();
 
@@ -77,17 +71,76 @@ class SceneInfographics extends Scene {
       }
     }
 
+    float scale = 1.0;
+
+    switch (easing) {
+      case EASEIN:
+        scale *= easeInOut(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime));
+      break;
+
+      case EASEOUT:
+        scale *= easeInOut(1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1]));
+      break;
+
+      case EASEINOUT:
+        scale *= easeInOut(min(mapConstrainNormalize(timestamp, timeKeyframes[0], timeKeyframes[0] + fadeTime), 1.0 - mapConstrainNormalize(timestamp, timeKeyframes[timeKeyframes.length-1] - fadeTime, timeKeyframes[timeKeyframes.length-1])));
+      break;
+    }
+
+    float highlightOpacity = 1.0;
+
+    if (highlightBounds != null) {
+
+      FloatList distancesToEdges = new FloatList();
+      if (pos.x >= highlightBounds.x1) {distancesToEdges.append(pos.x - highlightBounds.x1); }
+      if (pos.y >= highlightBounds.y1) {distancesToEdges.append(pos.y - highlightBounds.y1); }
+      if (pos.x <= highlightBounds.x2) {distancesToEdges.append(highlightBounds.x2 - pos.x); }
+      if (pos.y <= highlightBounds.y2) {distancesToEdges.append(highlightBounds.y2 - pos.y); }
+
+      // If is inside highlightBounds and between 0 and 25px from any edge
+      if (distancesToEdges.size() >= 4 && distancesToEdges.min() <= 25) {
+        highlightOpacity = easeInOut(map(distancesToEdges.min(), 0, 25, 0, 1));
+      }
+      // If not inside highlightBounds
+      else if (distancesToEdges.size() < 4) {
+        highlightOpacity = 0.0;
+      }
+    }
+
     if (timestamp >= timeKeyframes[0] && timestamp <= timeKeyframes[timeKeyframes.length-1]) {
       pushStyle();
 
       shapeMode(CENTER);
-      shape(
-        shape,
-        pos.x,
-        pos.y,
-        shape.width * scale,
-        shape.height * scale
-      );
+
+      if (highlightOpacity > 0.01) {
+        // Colored Shape
+        shape(
+          shape,
+          pos.x,
+          pos.y,
+          shape.width * scale,
+          shape.height * scale
+        );
+      }
+
+      if (highlightOpacity < 0.99) {
+
+        // White outlined Shape
+        shape.disableStyle();
+        fill(color(255, 1.0 - highlightOpacity));
+        stroke(color(colText, 1.0 - highlightOpacity));
+        strokeWeight(1.5);
+
+        shape(
+          shape,
+          pos.x,
+          pos.y,
+          shape.width * scale,
+          shape.height * scale
+        );
+
+        shape.enableStyle();
+      }
 
       popStyle();
     }
@@ -135,7 +188,8 @@ class SceneInfographics extends Scene {
         0.45,
         0.465
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[0]
     );
 
     // Electron 2
@@ -156,7 +210,8 @@ class SceneInfographics extends Scene {
         0.45,
         0.465
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[0]
     );
 
     // Electron 3
@@ -177,7 +232,8 @@ class SceneInfographics extends Scene {
         0.61,
         0.625
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[0]
     );
 
     // Electron 4
@@ -198,7 +254,8 @@ class SceneInfographics extends Scene {
         0.61,
         0.625
       },
-      EASEINOUT
+      EASEINOUT,
+      stepHighlightBounds[0]
     );
 
     // H-Plus 1
