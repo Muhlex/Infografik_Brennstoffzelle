@@ -27,7 +27,10 @@ class SceneInfographics extends Scene {
   String[] stepDescriptions;
   Area[] stepHighlightBounds;
 
-  float debugSKIP = 0;
+  float speed;
+  float time;
+  int prevTime;
+  int currTime;
   float[] previousTimestamps;
   int[] seeds;
 
@@ -47,6 +50,11 @@ class SceneInfographics extends Scene {
 
     fadeTime = 0.03;
     currStep = 0;
+
+    speed = 1.0;
+    time = 0.0;
+    prevTime = millis();
+    currTime = millis();
     previousTimestamps = new float[3];
     seeds = new int[] {
       int(random(MAX_INT)),
@@ -69,7 +77,7 @@ class SceneInfographics extends Scene {
       "Zeitgleich diffundieren die Wasserstoffionen \b(Protonen) durch die Elektrolytmembran in Richtung Kathode. " +
       "Die Membran ist \bnur \bfür \bProtonen \bdurchlässig, weshalb die Elektronen den äußeren Stromkreis durchlaufen.",
 
-      "An der Kathode angekommen, vereinen sich die Elektronen mit \bSauerstoffmolekülen, die durch einen Luftstrom zugeführt werden, zu \bSauerstoffionen. " +
+      "An der Kathode angekommen, vereinen sich die \bElektronen mit \bSauerstoffmolekülen, die durch einen Luftstrom zugeführt werden, zu \bSauerstoffionen. " +
       "Dies nennt man \bReduktion.",
 
       "Die Sauerstoffionen treffen anschließend auf die Protonen und reagieren zu \bWasser. " +
@@ -87,8 +95,8 @@ class SceneInfographics extends Scene {
       new Area(-80, 220, 284, 554),
       new Area(208, 182, 832, 254),
       new Area(256, 234, 624, 554),
-      new Area(742, 205, width + 80, 554),
-      new Area(580, 254, 742, height),
+      new Area(742, 182, width + 80, 554),
+      new Area(616, 254, 742, height),
       new Area(-80, -80, width + 80, height + 80)
     };
 
@@ -101,9 +109,30 @@ class SceneInfographics extends Scene {
   @Override
   void onKeyPressed() {
     if (key == 'm') {
-      debugSKIP += 100;
-    } else if (key == 'M') {
-      debugSKIP += 600;
+      speed += 0.1;
+    }
+    if (key == 'n') {
+      speed -= 0.1;
+    }
+
+    switch (keyCode) {
+      case RIGHT:
+      case DOWN:
+        if (currStep < stepDescriptions.length - 1) {
+          currStep++;
+        };
+      break;
+
+      case LEFT:
+      case UP:
+        if (currStep > 0) {
+          currStep--;
+        };
+      break;
+    }
+
+    if (Character.getNumericValue(key) >= 1 && Character.getNumericValue(key) <= stepDescriptions.length) {
+      currStep = Character.getNumericValue(key) - 1;
     }
   }
 
@@ -207,7 +236,13 @@ class SceneInfographics extends Scene {
     shape(illustrationBG, 197, 201, 646, 364);
 
     float secondsPerCycle = 40;
-    float timestamp = (debugSKIP + millis()) / (secondsPerCycle * 1000) % 1;
+
+    prevTime = currTime;
+    currTime = millis();
+    int millisPerDraw = currTime - prevTime;
+    time += millisPerDraw / 25000.0 * speed;
+
+    float timestamp = time % 1;
 
     float timestamps[] = new float[] {
       timestamp,
@@ -377,7 +412,7 @@ class SceneInfographics extends Scene {
         new PVector(210, 420),
         new PVector(210, 484),
         new PVector(random(416, 472), 298 + (48 * hPlus1Hole)),
-        new PVector(576, 298 + (48 * hPlus1Hole)),
+        new PVector(random(568, 616), 298 + (48 * hPlus1Hole)),
         new PVector(701, 468),
         new PVector(679, 460)
       },
@@ -401,7 +436,7 @@ class SceneInfographics extends Scene {
         new PVector(254, 420),
         new PVector(254, 524),
         new PVector(random(416, 472), 298 + (48 * hPlus2Hole)),
-        new PVector(572, 298 + (48 * hPlus2Hole)),
+        new PVector(random(568, 616), 298 + (48 * hPlus2Hole)),
         new PVector(657, 468),
         new PVector(679, 460)
       },
@@ -425,7 +460,7 @@ class SceneInfographics extends Scene {
         new PVector(210, 420),
         new PVector(210, 484),
         new PVector(random(416, 472), 298 + (48 * hPlus3Hole)),
-        new PVector(576, 298 + (48 * hPlus3Hole)),
+        new PVector(random(568, 616), 298 + (48 * hPlus3Hole)),
         new PVector(701, 468),
         new PVector(679, 460)
       },
@@ -449,7 +484,7 @@ class SceneInfographics extends Scene {
         new PVector(254, 420),
         new PVector(254, 524),
         new PVector(random(416, 472), 298 + (48 * hPlus4Hole)),
-        new PVector(572, 298 + (48 * hPlus4Hole)),
+        new PVector(random(568, 616), 298 + (48 * hPlus4Hole)),
         new PVector(657, 468),
         new PVector(679, 460)
       },
@@ -507,14 +542,14 @@ class SceneInfographics extends Scene {
       shapeO,
       new PVector[] {
         new PVector(786, 454),
-        new PVector(786, 454),
+        new PVector(786, 438),
         new PVector(786, 316),
         new PVector(786, 316)
       },
       new float[] {
         0.255,
-        0.27,
-        0.4,
+        0.32,
+        0.42,
         0.45
       },
       EASEIN,
@@ -527,15 +562,13 @@ class SceneInfographics extends Scene {
       shapeO,
       new PVector[] {
         new PVector(830, 454),
-        new PVector(830, 454),
         new PVector(830, 316),
         new PVector(830, 316)
       },
       new float[] {
         0.255,
-        0.27,
-        0.56,
-        0.61,
+        0.58,
+        0.61
       },
       EASEIN,
       stepHighlightBounds[currStep]
