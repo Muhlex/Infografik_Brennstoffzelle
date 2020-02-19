@@ -50,7 +50,7 @@ class SceneInfographics extends Scene {
       "Das sind miteinander verbundene, elektrische Leiter. " +
       "Zwischen den Elektroden befindet sich eine sogenannte \bElektrolytmembran.",
 
-      "Zuerst wird \bWasserstoff in die Brennstoffzelle geleitet. Dieser wird auf der Anodenseite \boxidiert." +
+      "Zuerst wird \bWasserstoff in die Brennstoffzelle geleitet. Dieser wird auf der Anodenseite \boxidiert. " +
       "Das heißt, ihm werden negativ geladene \bElektronen entzogen. " +
       "Übrig bleiben positive \bWasserstoffionen – auch \bProtonen genannt.",
 
@@ -66,7 +66,11 @@ class SceneInfographics extends Scene {
       "Die Sauerstoffionen treffen anschließend auf die Protonen und reagieren zu \bWasser. " +
       "Die einzige \bEmission einer Brennstoffzelle ist somit H2O.",
 
-      "Letzter Schritt"
+      "So funktioniert die \bBrennstoffzelle.\n"+
+      "Wenn Du dich jetzt fit fühlst, kannst du dich am \bQuiz versuchen!\n\n" +
+      "\bFun \bFact: Die CO"+sub2+"-Bilanz bei der Herstellung eines Brennstoffzellenfahrzeugs ist nur etwa 50% so hoch, wie bei einem klassischen Elektroauto. "
+      //"Da die chemisch gebundene Energie jedoch nur mit einem Wirkungsgrad von bis zu 60% in elektrische Energie umgewandelt werden kann, ist die Gesamtbilanz " +
+      //"(unter Einbezug der Betriebsphase) schlechter."
     };
 
     stepHighlightBounds = new Area[] {
@@ -76,7 +80,7 @@ class SceneInfographics extends Scene {
       new Area(256, 234, 624, 554),
       new Area(742, 205, width + 80, 554),
       new Area(580, 254, 742, height),
-      new Area(0, 0, width, height)
+      new Area(-80, -80, width + 80, height + 80)
     };
 
     prevButton = new ButtonStep(0,   604, 106, 176, -1, stepDescriptions.length-1);
