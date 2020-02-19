@@ -12,11 +12,14 @@ PFont fontLead;
 PFont fontLeadBold;
 PFont fontBody;
 PFont fontBodyBold;
+PFont fontMini;
+
 int   fontTitleSize      = 52;
 int   fontNavigationSize = 36;
 int   fontHeadingSize    = 32;
 int   fontLeadSize       = 24;
 int   fontBodySize       = 18;
+int   fontMiniSize       = 12;
 
 float defaultLineHeight  = 1.3;
 
@@ -51,6 +54,7 @@ void setup() {
   fontLeadBold    = createFont("font/Sarabun-Bold.ttf",    fontLeadSize);
   fontBody        = createFont("font/Sarabun-Regular.ttf", fontBodySize);
   fontBodyBold    = createFont("font/Sarabun-Bold.ttf",    fontBodySize);
+  fontMini        = createFont("font/Sarabun-Regular.ttf", fontMiniSize);
 
   scenes[0] = new SceneIntro();
   scenes[1] = new SceneInfographics();

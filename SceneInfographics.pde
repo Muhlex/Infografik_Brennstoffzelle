@@ -64,17 +64,19 @@ class SceneInfographics extends Scene {
       "Dies nennt man \bReduktion.",
 
       "Die Sauerstoffionen treffen anschließend auf die Protonen und reagieren zu \bWasser. " +
-      "Die einzige \bEmission einer Brennstoffzelle ist somit H2O."
+      "Die einzige \bEmission einer Brennstoffzelle ist somit H2O.",
+
+      "Letzter Schritt"
     };
 
     stepHighlightBounds = new Area[] {
       null, // First step does not have any moving elements
-      new Area(-20, 254, 332, 554),
-      new Area(300, 148, 850, 240),
-      new Area(300, 148, 850, 240),
-      new Area(300, 148, 850, 240),
-      new Area(300, 148, 850, 240),
-      new Area(300, 148, 850, 240)
+      new Area(-80, 220, 284, 554),
+      new Area(208, 182, 832, 254),
+      new Area(256, 234, 624, 554),
+      new Area(742, 205, width + 80, 554),
+      new Area(580, 254, 742, height),
+      new Area(0, 0, width, height)
     };
 
     prevButton = new ButtonStep(0,   604, 106, 176, -1, stepDescriptions.length-1);
@@ -225,6 +227,22 @@ class SceneInfographics extends Scene {
 
     popStyle();
 
+    pushStyle();
+
+    fill(colBright);
+    textFont(fontHeadingBold);
+    textAlign(LEFT, TOP);
+
+    text((currStep+1) + " / " + stepDescriptions.length, 193, 632);
+
+    textFont(fontMini);
+    textAlign(CENTER, TOP);
+    textLeading(fontMiniSize * defaultLineHeight);
+
+    text("Zahlen 1-" + stepDescriptions.length + " drücken, um zu wechseln", 175, 672, 104, 32);
+
+    popStyle();
+
     super.draw();
   }
 
@@ -323,7 +341,7 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(210, 420),
-        new PVector(268, 482),
+        new PVector(210, 484),
         new PVector(448, 346),
         new PVector(576, 346),
         new PVector(701, 468),
@@ -347,9 +365,9 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(254, 420),
-        new PVector(325, 530),
+        new PVector(254, 524),
         new PVector(448, 490),
-        new PVector(592, 490),
+        new PVector(572, 490),
         new PVector(657, 468),
         new PVector(657, 468)
       },
@@ -371,7 +389,7 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(210, 420),
-        new PVector(268, 482),
+        new PVector(210, 484),
         new PVector(448, 346),
         new PVector(576, 346),
         new PVector(701, 468),
@@ -395,9 +413,9 @@ class SceneInfographics extends Scene {
       shapeHPlus,
       new PVector[] {
         new PVector(254, 420),
-        new PVector(325, 530),
+        new PVector(254, 524),
         new PVector(448, 490),
-        new PVector(592, 490),
+        new PVector(572, 490),
         new PVector(657, 468),
         new PVector(657, 468)
       },
