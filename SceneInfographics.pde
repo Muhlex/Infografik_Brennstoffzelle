@@ -104,9 +104,16 @@ class SceneInfographics extends Scene {
     float secondsPerCycle = 30;
     float timestamp = (debugSKIP + millis()) / (secondsPerCycle * 1000) % 1;
 
+    if (timestamp * 12 % 1 > 0.5) {
+      shape(lightbulbOff, 484, 97);
+    }
+    else {
+      shape(lightbulbOn, 484, 97);
+    }
+
     this.drawMoveables(timestamp);
-    this.drawMoveables((timestamp + 0.66) % 1);
-    this.drawMoveables((timestamp + 0.66 * 2) % 1);
+    this.drawMoveables((timestamp + (2 / 3.0)) % 1);
+    this.drawMoveables((timestamp + (2 / 3.0) * 2) % 1);
   }
 
   void drawMoveables(float timestamp) {
@@ -427,7 +434,7 @@ class SceneInfographics extends Scene {
         0.58,
         0.66
       },
-      EASEINOUT
+      EASEIN
     );
 
     // H2O 2
@@ -444,7 +451,7 @@ class SceneInfographics extends Scene {
         0.74,
         0.82
       },
-      EASEINOUT
+      EASEIN
     );
   }
 }
