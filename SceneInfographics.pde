@@ -5,6 +5,7 @@ class SceneInfographics extends Scene {
   final int EASEIN    = 1;
   final int EASEOUT   = 2;
   final int EASEINOUT = 3;
+  final int MAX_INT   = 2147483647;
 
   PShape illustrationBG;
   PShape lightbulbOff;
@@ -27,6 +28,8 @@ class SceneInfographics extends Scene {
   Area[] stepHighlightBounds;
 
   float debugSKIP = 0;
+  float[] previousTimestamps;
+  int[] seeds;
 
   SceneInfographics() {
     super();
@@ -44,6 +47,12 @@ class SceneInfographics extends Scene {
 
     fadeTime = 0.03;
     currStep = 0;
+    previousTimestamps = new float[3];
+    seeds = new int[] {
+      int(random(MAX_INT)),
+      int(random(MAX_INT)),
+      int(random(MAX_INT))
+    };
 
     stepDescriptions = new String[] {
       "Die Brennstoffzelle besteht grundlegend aus zwei \bElektroden (Anode und Kathode). " +
@@ -200,6 +209,12 @@ class SceneInfographics extends Scene {
     float secondsPerCycle = 40;
     float timestamp = (debugSKIP + millis()) / (secondsPerCycle * 1000) % 1;
 
+    float timestamps[] = new float[] {
+      timestamp,
+      (timestamp + (2 / 3.0)) % 1,
+      (timestamp + (2 / 3.0) * 2) % 1
+    };
+
     if (currStep == 0) {
       shape(lightbulbOff, 484, 97);
     }
@@ -212,9 +227,16 @@ class SceneInfographics extends Scene {
         shape(lightbulbOn, 484, 97);
       }
 
-      this.drawMoveables(timestamp);
-      this.drawMoveables((timestamp + (2 / 3.0)) % 1);
-      this.drawMoveables((timestamp + (2 / 3.0) * 2) % 1);
+      for (int i = 0; i < timestamps.length; i++) {
+        if (timestamps[i] - previousTimestamps[i] < 0) {
+          seeds[i] = int(random(MAX_INT));
+        }
+        this.drawMoveables(timestamps[i], seeds[i]);
+      }
+    }
+
+    for (int i = 0; i < timestamps.length; i++) {
+      previousTimestamps[i] = timestamps[i];
     }
 
     // Background for lower panel
@@ -250,7 +272,10 @@ class SceneInfographics extends Scene {
     super.draw();
   }
 
-  void drawMoveables(float timestamp) {
+  void drawMoveables(float timestamp, int seed) {
+
+    randomSeed(seed);
+
     // Electron 1
     drawMoveable(
       timestamp,
@@ -339,6 +364,11 @@ class SceneInfographics extends Scene {
       stepHighlightBounds[currStep]
     );
 
+    int hPlus1Hole = int(random(0,2));
+    int hPlus2Hole = int(random(2,5));
+    int hPlus3Hole = int(random(0,2));
+    int hPlus4Hole = int(random(2,5));
+
     // H-Plus 1
     drawMoveable(
       timestamp,
@@ -346,10 +376,10 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(210, 420),
         new PVector(210, 484),
-        new PVector(448, 346),
-        new PVector(576, 346),
+        new PVector(random(416, 472), 298 + (48 * hPlus1Hole)),
+        new PVector(576, 298 + (48 * hPlus1Hole)),
         new PVector(701, 468),
-        new PVector(701, 468)
+        new PVector(679, 460)
       },
       new float[] {
         0.055,
@@ -357,7 +387,7 @@ class SceneInfographics extends Scene {
         0.26,
         0.46,
         0.56,
-        0.6
+        0.59
       },
       EASEINOUT,
       stepHighlightBounds[currStep]
@@ -370,10 +400,10 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(254, 420),
         new PVector(254, 524),
-        new PVector(448, 490),
-        new PVector(572, 490),
+        new PVector(random(416, 472), 298 + (48 * hPlus2Hole)),
+        new PVector(572, 298 + (48 * hPlus2Hole)),
         new PVector(657, 468),
-        new PVector(657, 468)
+        new PVector(679, 460)
       },
       new float[] {
         0.055,
@@ -381,7 +411,7 @@ class SceneInfographics extends Scene {
         0.33,
         0.45,
         0.56,
-        0.6
+        0.59
       },
       EASEINOUT,
       stepHighlightBounds[currStep]
@@ -394,10 +424,10 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(210, 420),
         new PVector(210, 484),
-        new PVector(448, 346),
-        new PVector(576, 346),
+        new PVector(random(416, 472), 298 + (48 * hPlus3Hole)),
+        new PVector(576, 298 + (48 * hPlus3Hole)),
         new PVector(701, 468),
-        new PVector(701, 468)
+        new PVector(679, 460)
       },
       new float[] {
         0.215,
@@ -405,7 +435,7 @@ class SceneInfographics extends Scene {
         0.42,
         0.62,
         0.72,
-        0.76
+        0.75
       },
       EASEINOUT,
       stepHighlightBounds[currStep]
@@ -418,10 +448,10 @@ class SceneInfographics extends Scene {
       new PVector[] {
         new PVector(254, 420),
         new PVector(254, 524),
-        new PVector(448, 490),
-        new PVector(572, 490),
+        new PVector(random(416, 472), 298 + (48 * hPlus4Hole)),
+        new PVector(572, 298 + (48 * hPlus4Hole)),
         new PVector(657, 468),
-        new PVector(657, 468)
+        new PVector(679, 460)
       },
       new float[] {
         0.215,
@@ -429,7 +459,7 @@ class SceneInfographics extends Scene {
         0.49,
         0.61,
         0.72,
-        0.76
+        0.75
       },
       EASEINOUT,
       stepHighlightBounds[currStep]
@@ -440,7 +470,7 @@ class SceneInfographics extends Scene {
       timestamp,
       shapeH2,
       new PVector[] {
-        new PVector(-54, 420),
+        new PVector(-54, random(290, 490)),
         new PVector(232, 420),
         new PVector(232, 420)
       },
@@ -458,7 +488,7 @@ class SceneInfographics extends Scene {
       timestamp,
       shapeH2,
       new PVector[] {
-        new PVector(-54, 420),
+        new PVector(-54, random(290, 490)),
         new PVector(232, 420),
         new PVector(232, 420)
       },
@@ -525,7 +555,7 @@ class SceneInfographics extends Scene {
         0.45,
         0.46,
         0.53,
-        0.6
+        0.59
       },
       EASEOUT,
       stepHighlightBounds[currStep]
@@ -545,7 +575,7 @@ class SceneInfographics extends Scene {
         0.61,
         0.62,
         0.69,
-        0.76
+        0.75
       },
       EASEOUT,
       stepHighlightBounds[currStep]
@@ -556,7 +586,7 @@ class SceneInfographics extends Scene {
       timestamp,
       shapeO2,
       new PVector[] {
-        new PVector(1094, 394),
+        new PVector(1094, random(290, 490)),
         new PVector(808,  454),
         new PVector(808,  454)
       },
