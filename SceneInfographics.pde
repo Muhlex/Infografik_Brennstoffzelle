@@ -133,15 +133,15 @@ class SceneInfographics extends Scene {
     shapeVolume = loadShape("img/svg/volume.svg");
     shapeVolumeDisabled = loadShape("img/svg/volume_disabled.svg");
 
-    muteButton = new ButtonIcon(119, 664, 48, 48, shapeVolume, new ButtonCallback() {
+    muteButton = new ButtonIcon(119, 664, 48, 48, shapeVolume, shapeVolumeDisabled, new ButtonCallback() {
       void onClick() {
         if (isMuted) {
-          muteButton.icon = shapeVolume;
+          muteButton.enable();
           volume = prevVolume;
           isMuted = false;
         }
         else {
-          muteButton.icon = shapeVolumeDisabled;
+          muteButton.disable();
           prevVolume = volume;
           volume = 0.0;
           isMuted = true;
@@ -154,7 +154,7 @@ class SceneInfographics extends Scene {
       void onChange(float value) {
         volume = value;
         if (isPaused) {
-          muteButton.icon = shapeVolume;
+          muteButton.enable();
           isMuted = false;
         }
       }
@@ -164,15 +164,15 @@ class SceneInfographics extends Scene {
     shapeSpeed = loadShape("img/svg/speed.svg");
     shapeSpeedDisabled = loadShape("img/svg/speed_disabled.svg");
 
-    pauseButton = new ButtonIcon(119, 712, 48, 48, shapeSpeed, new ButtonCallback() {
+    pauseButton = new ButtonIcon(119, 712, 48, 48, shapeSpeed, shapeSpeedDisabled, new ButtonCallback() {
       void onClick() {
         if (isPaused) {
-          pauseButton.icon = shapeSpeed;
+          pauseButton.enable();
           speed = prevSpeed;
           isPaused = false;
         }
         else {
-          pauseButton.icon = shapeSpeedDisabled;
+          pauseButton.disable();
           prevSpeed = speed;
           speed = 0.0;
           isPaused = true;
@@ -185,7 +185,7 @@ class SceneInfographics extends Scene {
       void onChange(float value) {
         speed = value;
         if (isPaused) {
-          pauseButton.icon = shapeSpeed;
+          pauseButton.enable();
           isPaused = false;
         }
       }

@@ -1,13 +1,39 @@
 class ButtonIcon extends Button {
 
-  PShape icon;
+  PShape shapeIcon;
+  PShape shapeIconDisabled;
+  PGraphics icon;
+  PGraphics iconDisabled;
 
-  ButtonIcon(int x, int y, int w, int h, PShape icon, ButtonCallback callback) {
+  boolean isDisabled;
+
+  ButtonIcon(int x, int y, int w, int h, PShape shapeIcon, PShape shapeIconDisabled, ButtonCallback callback) {
     super(x, y, w, h);
 
-    this.icon = icon;
+    this.shapeIcon = shapeIcon;
 
     this.callback = callback;
+
+    // Convert Shapes to raster images, to allow for setting their transparency
+    this.icon = createGraphics(int(shapeIcon.width), int(shapeIcon.height));
+    icon.beginDraw();
+    icon.shape(shapeIcon);
+    icon.endDraw();
+
+    this.iconDisabled = createGraphics(int(shapeIconDisabled.width), int(shapeIconDisabled.height));
+    iconDisabled.beginDraw();
+    iconDisabled.shape(shapeIconDisabled);
+    iconDisabled.endDraw();
+
+    this.isDisabled = false;
+  }
+
+  void disable() {
+    isDisabled = true;
+  }
+
+  void enable() {
+    isDisabled = false;
   }
 
   @Override
@@ -21,8 +47,17 @@ class ButtonIcon extends Button {
   void draw() {
     pushStyle();
 
-    shapeMode(CENTER);
-    shape(icon, x + w / 2, y + h / 2);
+    if (this.isHovered) {
+      tint(255, 0.8);
+    }
+
+    imageMode(CENTER);
+    if (isDisabled) {
+      image(iconDisabled, x + w / 2, y + h / 2);
+    }
+    else {
+      image(icon, x + w / 2, y + h / 2);
+    }
 
     popStyle();
   }
