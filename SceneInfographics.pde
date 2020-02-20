@@ -40,10 +40,14 @@ class SceneInfographics extends Scene {
 
   float volume;
   float prevVolume;
+  float minVolume;
+  float maxVolume;
   boolean isMuted;
 
   float speed;
   float prevSpeed;
+  float minSpeed;
+  float maxSpeed;
   boolean isPaused;
 
   float time;
@@ -69,12 +73,16 @@ class SceneInfographics extends Scene {
     fadeTime = 0.03;
     currStep = 0;
 
-    volume = 1.0;
+    volume = 0.5;
     prevVolume = speed;
+    minVolume = 0.0001;
+    maxVolume = 1.0;
     isMuted = false;
 
     speed = 1.0;
     prevSpeed = speed;
+    minSpeed = 0.0;
+    maxSpeed = 3.0;
     isPaused = false;
 
     time = 0.0;
@@ -136,24 +144,41 @@ class SceneInfographics extends Scene {
         if (isMuted) {
           muteButton.enable();
           volume = prevVolume;
+          if (volume <= minVolume) {
+            volume = lerp(minVolume, maxVolume, 0.5);
+          }
           isMuted = false;
+          volumeSlider.value = volume;
         }
         else {
           muteButton.disable();
           prevVolume = volume;
-          volume = 0.0;
+          volume = minVolume;
           isMuted = true;
+          volumeSlider.value = volume;
+        }
+        for (SoundFile sound : narrationSounds) {
+          sound.amp(volume);
         }
       }
     });
     elements.add(muteButton);
 
-    volumeSlider = new InputSlider(176, 672, 128, 32, 0.0, 1.0, 0.75, new InputSliderCallback(){
+    volumeSlider = new InputSlider(176, 672, 128, 32, minVolume, maxVolume, volume, new InputSliderCallback(){
       void onChange(float value) {
         volume = value;
-        if (isPaused) {
+
+        if (isMuted && value > minVolume) {
           muteButton.enable();
           isMuted = false;
+        } else if (! isMuted && value <= minVolume) {
+          muteButton.disable();
+          isMuted = true;
+        }
+
+
+        for (SoundFile sound : narrationSounds) {
+          sound.amp(volume);
         }
       }
     });
@@ -167,24 +192,33 @@ class SceneInfographics extends Scene {
         if (isPaused) {
           pauseButton.enable();
           speed = prevSpeed;
+          if (speed <= minSpeed) {
+            speed = lerp(minSpeed, maxSpeed, 0.5);
+          }
           isPaused = false;
+          speedSlider.value = speed;
         }
         else {
           pauseButton.disable();
           prevSpeed = speed;
-          speed = 0.0;
+          speed = minSpeed;
           isPaused = true;
+          speedSlider.value = speed;
         }
       }
     });
     elements.add(pauseButton);
 
-    speedSlider = new InputSlider(176, 720, 128, 32, 0.0, 2.4, 1.0, new InputSliderCallback(){
+    speedSlider = new InputSlider(176, 720, 128, 32, minSpeed, maxSpeed, speed, new InputSliderCallback(){
       void onChange(float value) {
         speed = value;
-        if (isPaused) {
+
+        if (isPaused && value > minSpeed) {
           pauseButton.enable();
           isPaused = false;
+        } else if (! isPaused && value <= minSpeed) {
+          pauseButton.disable();
+          isPaused = true;
         }
       }
     });

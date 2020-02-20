@@ -60,9 +60,9 @@ void setup() {
   fontBodyBold    = createFont("font/Sarabun-Bold.ttf",    fontBodySize);
   fontMini        = createFont("font/Sarabun-Regular.ttf", fontMiniSize);
 
-  scenes[0] = new SceneIntro(this);
-  scenes[1] = new SceneInfographics(this);
-  scenes[2] = new SceneQuiz(this);
+  scenes[0] = new SceneIntro();
+  scenes[1] = new SceneInfographics();
+  scenes[2] = new SceneQuiz();
 
   // Use 0 to 1 Alpha instead of 0 to 255
   colorMode(RGB, 255, 255, 255, 1);
@@ -75,18 +75,13 @@ void setup() {
   narrationSounds = new SoundFile[7];
   for (int i = 0; i < 7; i++) {
     narrationSounds[i] = new SoundFile(this, "audio/step"+i+".wav");
+    narrationSounds[i].amp(0.5);
   }
 }
 
 void draw() {
   background(colBright);
   scenes[currentScene].draw();
-
-  // Debug show mouse position
-  //if (frameCount % 120 == 0) {
-  //  println("Mouse X: " + mouseX);
-  //  println("Mouse Y: " + mouseY);
-  //}
 }
 
 void mousePressed() {
