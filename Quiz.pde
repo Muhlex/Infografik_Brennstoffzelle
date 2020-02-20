@@ -92,6 +92,8 @@ class Quiz {
     ValidationResult result = questions.get(currQuestion).validate(selectedAnswers);
     score += result.amountCorrect * 10;
     score -= result.amountFalse * 5;
+    // Clamp Score > 0
+    if (score < 0) {score = 0;}
     timer.subtract(result.amountFalse * 10 * 1000);
     answersConfirmed = true;
     return result;
