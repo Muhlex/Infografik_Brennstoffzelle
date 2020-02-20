@@ -83,7 +83,7 @@ class SceneQuiz extends Scene {
     elements.addAll(inputs);
 
     quizQuestionCount = 2;
-    quizTime = 91000;
+    quizTime = 151000;
 
     this.quiz = new Quiz(questions, clozeTests, quizTime, new QuizCallback() {
       void onEnd(QuizState reason) {

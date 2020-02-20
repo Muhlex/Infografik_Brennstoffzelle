@@ -1,7 +1,9 @@
-Das hier ist ein
-Lückentext
-. Daher gibt es hier viele
-Lücken
-. Das ist sehr schön, oder findest du etwa
-nicht
-?
+Nachdem die
+Elektronen
+per Oxidation vom
+Wasserstoff
+getrennt werden, wandern sie über einen elektrischen Leiter zur
+Kathode
+. Dort reduzieren sie Sauerstoffmoleküle, die durch Außenluft zugeführt werden, zu
+Sauerstoffionen
+.

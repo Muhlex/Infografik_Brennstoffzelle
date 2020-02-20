@@ -1,6 +1,12 @@
-Ist die Richtige Antwort B?
-Nein es ist A.;Ja genau.;Keine Ahnung.
+Welche Objekte sind i. d. R. grundlegende Bestandteile einer Brennstoffzelle?
+Glühbirne;Elektrode;Elektrolytmembran
+1;2
+Welche chemischen Elemente werden der Brennstoffzelle zugeführt?
+Sauerstoff;Stickstoff;Wasserstoff
+0;2
+Wie nennt man den Prozess an der Kathode, wenn dem Sauerstoff Elektronen zugeführt werden?
+Oxidation;Implosion;Reduktion
+2
+Welche Aussage(n) ist/sind korrekt?
+Die Brennstoffzelle stößt nur geringe Mengen an CO₂ aus.;Bei der „kalten Verbrennung“ in der Brennstoffzelle entsteht nur Wasser.;Die Brennstoffzelle erzeugt kinetische Energie.
 1
-Magst du Schokoeis?
-Natürlich, das schmeckt super.;Auf jeden Fall, einfach klasse.;Ne.
-0;1
