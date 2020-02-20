@@ -8,14 +8,18 @@ class InputText extends Element {
   boolean ignoreKeys;
   boolean isDisabled;
   boolean isCorrect;
+  String correctValue;
 
   int paddingX;
   int paddingY;
 
   InputText(int x, int y, int size, InputTextCallback callback) {
-    this(x, y, size, "", callback);
+    this(x, y, size, "", callback, null);
   }
   InputText(int x, int y, int size, String initialValue, InputTextCallback callback) {
+    this(x, y, size, initialValue, callback, null);
+  }
+  InputText(int x, int y, int size, String initialValue, InputTextCallback callback, String correctValue) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -25,6 +29,7 @@ class InputText extends Element {
     this.ignoreKeys = false;
     this.isDisabled = false;
     this.isCorrect = false;
+    this.correctValue = correctValue;
     this.paddingX = 4;
     this.paddingY = 4;
 
@@ -138,7 +143,17 @@ class InputText extends Element {
 
     setFontStyle();
 
-    text(value, this.x + defaultStrokeWeight + paddingX, this.y + defaultStrokeWeight + paddingY);
+    String text;
+
+    if (isDisabled && correctValue != null && value.trim().isEmpty()) {
+      text = correctValue;
+      fill(colText);
+    }
+    else {
+      text = value;
+    }
+
+    text(text, this.x + defaultStrokeWeight + paddingX, this.y + defaultStrokeWeight + paddingY);
 
 
     popStyle();

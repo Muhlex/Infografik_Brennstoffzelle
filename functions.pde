@@ -84,7 +84,7 @@ ArrayList<InputText> createClozeInputs(ClozeTest clozeTest, float x, float y, fl
     }
 
     if (solutions.size() > i) {
-      InputText newInput = new InputText(int(currXPos), int(currYPos - 8), solutions.get(i).length() + 2, null);
+      InputText newInput = new InputText(int(currXPos), int(currYPos - 8), solutions.get(i).length() + 2, "", null, solutions.get(i));
 
       // Check if new Input is too wide for the current line. If so, move it
       if (newInput.w > x2 - currXPos) {
