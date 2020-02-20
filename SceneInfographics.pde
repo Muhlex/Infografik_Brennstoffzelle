@@ -367,22 +367,26 @@ class SceneInfographics extends Scene {
 
     pushStyle();
 
+    // Controls hint text
+    fill(colText);
+    textFont(fontMini);
+    textAlign(LEFT, TOP);
+    textLeading(fontMiniSize * defaultLineHeight);
+
+    text("Steuerung per Pfeiltasten oder Zahlentasten 1-" + stepDescriptions.length + " möglich", 32, 587);
+
+    // Step description text
     fill(colBright);
     textFont(fontBody);
-    textAlign(LEFT, TOP);
     textLeading(fontBodySize * defaultLineHeight);
 
     textExt(stepDescriptions[currStep], 368, 628, 512, fontBodyBold);
 
+    // Current step indicator
+    textAlign(CENTER, TOP);
     textFont(fontHeadingBold);
 
-    text((currStep+1) + " / " + stepDescriptions.length, 193, 624);
-
-    fill(colText);
-    textFont(fontMini);
-    textLeading(fontMiniSize * defaultLineHeight);
-
-    text("Steuerung per Pfeiltasten oder Zahlentasten 1-" + stepDescriptions.length + " möglich", 32, 587);
+    text((currStep+1) + " / " + stepDescriptions.length, 176, 624, 128, 48);
 
     popStyle();
 

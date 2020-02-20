@@ -10,6 +10,8 @@ class SceneQuiz extends Scene {
   IntList clozeResult;
   ArrayList<InputText> inputs;
 
+  PShape[] questionImages;
+
   int quizTime;
   int quizQuestionCount;
 
@@ -36,6 +38,12 @@ class SceneQuiz extends Scene {
       }
 
       questions.add(new Question(questionTitle, answers, solutions));
+    }
+
+    questionImages = new PShape[questions.size()];
+
+    for (int i = 0; i < questionImages.length; i++) {
+      questionImages[i] = loadShape("img/svg/quiz/" + i + ".svg");
     }
 
     // Load clozetest from file
@@ -487,6 +495,9 @@ class SceneQuiz extends Scene {
       }
 
       popStyle();
+
+      // Images
+      shape(questionImages[quiz.currQuestion], 656, 281, 352, 352);
     }
 
     // Cloze Test specific Elements
