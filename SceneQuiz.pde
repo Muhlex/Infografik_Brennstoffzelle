@@ -404,7 +404,7 @@ class SceneQuiz extends Scene {
           buffer = "Deine Kenntnisse zur Brennstoffzelle sind wirklich beeindruckend.";
         } else if (quiz.score >= quiz.maxScore * 0.8) {
           buffer = "Dein Verständnis zur Brennstoffzelle ist wirklich gut. " +
-                   "Vielleicht schaust Du Dir die Fachbegriffe noch einmal genauer an, um den letzten Rest herauszuholen!.";
+                   "Vielleicht schaust Du Dir die Fachbegriffe noch einmal genauer an, um den letzten Rest herauszuholen!";
         } else if (quiz.score >= quiz.maxScore * 0.5) {
           buffer = "Schaue Dir noch einmal die Infografik an und achte auch auf die verwendete Terminologie. " +
                    "Dann holst Du Dir auch die restlichen Punkte ab!";
