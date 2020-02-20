@@ -379,7 +379,8 @@ class SceneQuiz extends Scene {
       case INITIAL:
         buffer = "Hier werden Dir nacheinander verschiedene \bMultiple-Choice-Fragen gestellt. " +
                  "Wenn du diese gemeistert hast, kommt am Ende noch ein \bLückentext auf dich zu. " +
-                 "Dabei solltest Du die Zeit im Blick behalten, da dir nur X Minuten für alle 3 Fragen zur Verfügung stehen. " +
+                 "Dabei solltest Du die Zeit im Blick behalten, da dir nur "+ msToMinSecString(quiz.availableTime - 1000) +" Minuten " +
+                 "für alle "+ (quiz.questions.size() + 1) +" Fragen zur Verfügung stehen. " +
                  "Bei einer falschen Antwort erhältst Du eine Zeitstrafe.\n\n" +
                  "\bViel \bErfolg!";
         textExt(buffer, 30, 446, 564, fontLeadBold);
@@ -424,7 +425,7 @@ class SceneQuiz extends Scene {
       switch(quiz.state) {
         case QUESTIONS:
         case CLOZETESTS:
-          buffer = "\bFrage \b" + (quiz.currQuestion + 1) + " \b/ \b3";
+          buffer = "\bFrage \b" + (quiz.currQuestion + 1) + " \b/ \b" + (quiz.questions.size() + 1);
         break;
 
         default:
