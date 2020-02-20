@@ -328,7 +328,7 @@ class SceneInfographics extends Scene {
     prevTime = currTime;
     currTime = millis();
     int millisPerDraw = currTime - prevTime;
-    time += millisPerDraw / 25000.0 * speed;
+    time += millisPerDraw / 28000.0 * speed;
 
     float timestamp = time % 1;
 
@@ -501,8 +501,8 @@ class SceneInfographics extends Scene {
       new float[] {
         0.055,
         0.13,
-        0.26,
-        0.46,
+        random(0.26, 0.33),
+        random(0.39, 0.46),
         0.56,
         0.59
       },
@@ -525,8 +525,8 @@ class SceneInfographics extends Scene {
       new float[] {
         0.055,
         0.13,
-        0.33,
-        0.45,
+        random(0.26, 0.33),
+        random(0.39, 0.46),
         0.56,
         0.59
       },
@@ -549,8 +549,8 @@ class SceneInfographics extends Scene {
       new float[] {
         0.215,
         0.29,
-        0.42,
-        0.62,
+        random(0.42, 0.49),
+        random(0.55, 0.62),
         0.72,
         0.75
       },
@@ -573,8 +573,8 @@ class SceneInfographics extends Scene {
       new float[] {
         0.215,
         0.29,
-        0.49,
-        0.61,
+        random(0.42, 0.49),
+        random(0.55, 0.62),
         0.72,
         0.75
       },

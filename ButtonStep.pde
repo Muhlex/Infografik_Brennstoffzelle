@@ -29,9 +29,6 @@ class ButtonStep extends Button {
 
   @Override
   void draw() {
-    if ((relativeValue < 0 && currStep == 0) || (relativeValue > 0 && currStep == maxValue)) {
-      return;
-    }
     pushStyle();
 
     if (this.isHovered) {
@@ -39,10 +36,19 @@ class ButtonStep extends Button {
       fill(color(colBright), 0.8);
     }
 
+    if ((relativeValue < 0 && currStep == 0) || (relativeValue > 0 && currStep == maxValue)) {
+      shapeArrow.disableStyle();
+      fill(color(colBright), 0.2);
+    }
+
     shapeMode(CENTER);
     shape(shapeArrow, x + w/2, y + h/2);
 
     if (this.isHovered) {
+      shapeArrow.enableStyle();
+    }
+
+    if ((relativeValue < 0 && currStep == 0) || (relativeValue > 0 && currStep == maxValue)) {
       shapeArrow.enableStyle();
     }
 
