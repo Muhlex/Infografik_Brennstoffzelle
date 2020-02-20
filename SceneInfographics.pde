@@ -24,8 +24,6 @@ class SceneInfographics extends Scene {
   PShape shapeVolume;
   PShape shapeVolumeDisabled;
 
-  SoundFile[] narrationSounds;
-
   ButtonStep prevButton;
   ButtonStep nextButton;
 
@@ -54,8 +52,8 @@ class SceneInfographics extends Scene {
   float[] previousTimestamps;
   int[] seeds;
 
-  SceneInfographics(PApplet sketch) {
-    super(sketch);
+  SceneInfographics() {
+    super();
 
     illustrationBG         = loadShape("img/svg/infographics_bg.svg");
     lightbulbOff           = loadShape("img/svg/bulb.svg");
@@ -114,11 +112,6 @@ class SceneInfographics extends Scene {
       "Wenn Du dich jetzt fit fühlst, kannst du dich am \bQuiz versuchen!\n\n" +
       "\bFun \bFact: Die CO"+sub2+"-Bilanz bei der Herstellung eines Brennstoffzellenfahrzeugs ist nur etwa 50% so hoch, wie bei einem klassischen Elektroauto. "
     };
-
-    narrationSounds = new SoundFile[stepDescriptions.length];
-    for (int i = 0; i < narrationSounds.length; i++) {
-      narrationSounds[i] = new SoundFile(sketch, "audio/step"+i+".wav");
-    }
 
     stepHighlightBounds = new Area[] {
       null, // First step does not have any moving elements

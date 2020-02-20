@@ -43,6 +43,8 @@ String sub2 = "\u2082";
 String supPlus = "\u207A";
 String supMinus = "\u207B";
 
+SoundFile[] narrationSounds;
+
 void setup() {
   size(1040, 780); // 4:3 Resolution
   pixelDensity(displayDensity());
@@ -68,6 +70,12 @@ void setup() {
   // Default styles
   noStroke();
   fill(colPrimary);
+
+  // Import all sound files
+  narrationSounds = new SoundFile[7];
+  for (int i = 0; i < 7; i++) {
+    narrationSounds[i] = new SoundFile(this, "audio/step"+i+".wav");
+  }
 }
 
 void draw() {

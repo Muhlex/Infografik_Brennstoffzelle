@@ -28,6 +28,9 @@ class ButtonNavigation extends Button {
   void onClick(boolean insideElement) {
     if (insideElement) {
       currentScene = this.destinationScene;
+      if (narrationSounds[currStep].isPlaying()) {
+        narrationSounds[currStep].stop();
+      }
     }
   }
 
