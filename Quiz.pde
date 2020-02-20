@@ -8,6 +8,7 @@ class Quiz {
   IntList selectedAnswers;
   StringList clozeAnswerValues;
   int score;
+  int maxScore;
   int availableTime;
 
   ProcessingTimer timer;
@@ -30,6 +31,15 @@ class Quiz {
         getCallback().onEnd(state);
       }
     });
+
+    // Caluclate max reachable score
+    for (Question question : questions) {
+      this.maxScore += question.solutions.size();
+    }
+    for (ClozeTest clozeTest : clozeTests) {
+      this.maxScore += clozeTest.solutions.size();
+    }
+    this.maxScore *= 10;
   }
 
   QuizCallback getCallback() {

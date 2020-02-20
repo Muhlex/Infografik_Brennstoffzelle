@@ -349,13 +349,13 @@ class SceneQuiz extends Scene {
       break;
 
       case DONE:
-        if (quiz.score >= 100) {
+        if (quiz.score >= quiz.maxScore) {
           buffer = "Das war \bperfekt!\nDu hast alls richtig beantwortet.";
-        } else if (quiz.score >= 80) {
+        } else if (quiz.score >= quiz.maxScore * 0.8) {
           buffer = "Das war \bsehr \bgut!\nDu kennst Dich im Thema super aus.";
-        } else if (quiz.score >= 50) {
+        } else if (quiz.score >= quiz.maxScore * 0.5) {
           buffer = "Das war \bnicht \bschlecht!\nDas kannst Du aber noch besser.";
-        } else if (quiz.score >= 25) {
+        } else if (quiz.score >= quiz.maxScore * 0.25) {
           buffer = "Das war schonmal \bein \bAnfang!\nDa geht aber noch mehr.";
         } else {
           buffer = "Das war... ein Versuch.\n\bWiederhole den Stoff noch einmal.";
@@ -391,15 +391,15 @@ class SceneQuiz extends Scene {
       break;
 
       case DONE:
-        if (quiz.score >= 100) {
+        if (quiz.score >= quiz.maxScore) {
           buffer = "Deine Kenntnisse zur Brennstoffzelle sind wirklich beeindruckend.";
-        } else if (quiz.score >= 80) {
+        } else if (quiz.score >= quiz.maxScore * 0.8) {
           buffer = "Dein Verständnis zur Brennstoffzelle ist wirklich gut. " +
                    "Vielleicht schaust Du Dir die Fachbegriffe noch einmal genauer an, um den letzten Rest herauszuholen!.";
-        } else if (quiz.score >= 50) {
+        } else if (quiz.score >= quiz.maxScore * 0.5) {
           buffer = "Schaue Dir noch einmal die Infografik an und achte auch auf die verwendete Terminologie. " +
                    "Dann holst Du Dir auch die restlichen Punkte ab!";
-        } else if (quiz.score >= 25) {
+        } else if (quiz.score >= quiz.maxScore * 0.25) {
           buffer = "Sieh Dir die einzelnen Schritte der Infografik erneut im Detail an. " +
                    "Wenn Du auf die Fachbegriffe und die genauen Abläufe achtest, kommst Du der Maximalpunkzzahl immer näher.";
         } else {
@@ -433,7 +433,7 @@ class SceneQuiz extends Scene {
       }
 
       textExt(buffer, 32, 129, 380, fontLeadBold);
-      textExt("Punktestand: \b" + quiz.score + " \b/ \b100", 32, 162, 380, fontLeadBold);
+      textExt("Punktestand: \b" + quiz.score + " \b/ \b" + quiz.maxScore, 32, 162, 380, fontLeadBold);
 
       color colTimer = lerpColor(colRed, colText, (float(quiz.timer.getRemaining()) / float(quizTime)));
       fill(colTimer);
