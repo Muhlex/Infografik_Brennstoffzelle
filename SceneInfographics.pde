@@ -19,15 +19,33 @@ class SceneInfographics extends Scene {
   PShape shapeO2MinusWElectrons;
   PShape shapeH2O;
 
+  PShape shapeSpeed;
+  PShape shapeSpeedDisabled;
+  PShape shapeVolume;
+  PShape shapeVolumeDisabled;
+
   ButtonStep prevButton;
   ButtonStep nextButton;
+
+  ButtonIcon muteButton;
+  InputSlider volumeSlider;
+
+  ButtonIcon pauseButton;
+  InputSlider speedSlider;
 
   float fadeTime;
 
   String[] stepDescriptions;
   Area[] stepHighlightBounds;
 
+  float volume;
+  float prevVolume;
+  boolean isMuted;
+
   float speed;
+  float prevSpeed;
+  boolean isPaused;
+
   float time;
   int prevTime;
   int currTime;
@@ -51,7 +69,14 @@ class SceneInfographics extends Scene {
     fadeTime = 0.03;
     currStep = 0;
 
+    volume = 1.0;
+    prevVolume = speed;
+    isMuted = false;
+
     speed = 1.0;
+    prevSpeed = speed;
+    isPaused = false;
+
     time = 0.0;
     prevTime = millis();
     currTime = millis();
@@ -104,10 +129,73 @@ class SceneInfographics extends Scene {
     nextButton = new ButtonStep(934, 604, 106, 176,  1, stepDescriptions.length-1);
     elements.add(prevButton);
     elements.add(nextButton);
+
+    shapeVolume = loadShape("img/svg/volume.svg");
+    shapeVolumeDisabled = loadShape("img/svg/volume_disabled.svg");
+
+    muteButton = new ButtonIcon(119, 664, 48, 48, shapeVolume, new ButtonCallback() {
+      void onClick() {
+        if (isMuted) {
+          muteButton.icon = shapeVolume;
+          volume = prevVolume;
+          isMuted = false;
+        }
+        else {
+          muteButton.icon = shapeVolumeDisabled;
+          prevVolume = volume;
+          volume = 0.0;
+          isMuted = true;
+        }
+      }
+    });
+    elements.add(muteButton);
+
+    volumeSlider = new InputSlider(176, 672, 128, 32, 0.0, 1.0, 0.75, new InputSliderCallback(){
+      void onChange(float value) {
+        volume = value;
+        if (isPaused) {
+          muteButton.icon = shapeVolume;
+          isMuted = false;
+        }
+      }
+    });
+    elements.add(volumeSlider);
+
+    shapeSpeed = loadShape("img/svg/speed.svg");
+    shapeSpeedDisabled = loadShape("img/svg/speed_disabled.svg");
+
+    pauseButton = new ButtonIcon(119, 712, 48, 48, shapeSpeed, new ButtonCallback() {
+      void onClick() {
+        if (isPaused) {
+          pauseButton.icon = shapeSpeed;
+          speed = prevSpeed;
+          isPaused = false;
+        }
+        else {
+          pauseButton.icon = shapeSpeedDisabled;
+          prevSpeed = speed;
+          speed = 0.0;
+          isPaused = true;
+        }
+      }
+    });
+    elements.add(pauseButton);
+
+    speedSlider = new InputSlider(176, 720, 128, 32, 0.0, 2.4, 1.0, new InputSliderCallback(){
+      void onChange(float value) {
+        speed = value;
+        if (isPaused) {
+          pauseButton.icon = shapeSpeed;
+          isPaused = false;
+        }
+      }
+    });
+    elements.add(speedSlider);
   }
 
   @Override
   void onKeyPressed() {
+    super.onKeyPressed();
     if (key == 'm') {
       speed += 0.1;
     }
@@ -117,14 +205,14 @@ class SceneInfographics extends Scene {
 
     switch (keyCode) {
       case RIGHT:
-      case DOWN:
+      case UP:
         if (currStep < stepDescriptions.length - 1) {
           currStep++;
         };
       break;
 
       case LEFT:
-      case UP:
+      case DOWN:
         if (currStep > 0) {
           currStep--;
         };
@@ -286,21 +374,15 @@ class SceneInfographics extends Scene {
 
     textExt(stepDescriptions[currStep], 368, 628, 512, fontBodyBold);
 
-    popStyle();
-
-    pushStyle();
-
-    fill(colBright);
     textFont(fontHeadingBold);
-    textAlign(LEFT, TOP);
 
-    text((currStep+1) + " / " + stepDescriptions.length, 193, 632);
+    text((currStep+1) + " / " + stepDescriptions.length, 193, 624);
 
+    fill(colText);
     textFont(fontMini);
-    textAlign(CENTER, TOP);
     textLeading(fontMiniSize * defaultLineHeight);
 
-    text("Zahlen 1-" + stepDescriptions.length + " drücken, um zu wechseln", 175, 672, 104, 32);
+    text("Steuerung per Pfeiltasten oder Zahlentasten 1-" + stepDescriptions.length + " möglich", 32, 587);
 
     popStyle();
 

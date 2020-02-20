@@ -83,6 +83,10 @@ void mousePressed() {
   scenes[currentScene].onMousePressed();
 }
 
+void mouseDragged() {
+  scenes[currentScene].onMouseDragged();
+}
+
 void keyPressed() {
   scenes[currentScene].onKeyPressed();
 }

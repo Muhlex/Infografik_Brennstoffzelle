@@ -1,5 +1,7 @@
 class Button extends Element {
 
+  ButtonCallback callback;
+
   Button(int x, int y, int w, int h) {
     this.x = x;
     this.y = y;
@@ -10,7 +12,7 @@ class Button extends Element {
   @Override
   void onClick(boolean insideElement) {
     if (insideElement) {
-      println("Button clicked.");
+      callback.onClick();
     }
   }
 
@@ -22,4 +24,8 @@ class Button extends Element {
 
     popStyle();
   }
+}
+
+interface ButtonCallback {
+  void onClick();
 }

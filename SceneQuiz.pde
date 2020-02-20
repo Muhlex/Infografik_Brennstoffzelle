@@ -129,7 +129,7 @@ class SceneQuiz extends Scene {
     }
 
     // Initialize Action Buttons
-    buttonRestart = new ButtonAction(417, 179, 22, 8, "Quiz neustarten", new ButtonActionCallback() {
+    buttonRestart = new ButtonAction(417, 179, 22, 8, "Quiz neustarten", new ButtonCallback() {
       void onClick() {
         quiz.reset();
         buttonStart.show();
@@ -156,7 +156,7 @@ class SceneQuiz extends Scene {
     buttonRestart.hide();
     elements.add(buttonRestart);
 
-    buttonStart = new ButtonAction(864, 701, 22, 8, "Quiz starten", new ButtonActionCallback() {
+    buttonStart = new ButtonAction(864, 701, 22, 8, "Quiz starten", new ButtonCallback() {
       void onClick() {
         quiz.start();
         buttonStart.hide();
@@ -170,7 +170,7 @@ class SceneQuiz extends Scene {
     });
     elements.add(buttonStart);
 
-    buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonActionCallback() {
+    buttonConfirm = new ButtonAction(805, 701, 22, 8, "Antwort bestätigen", new ButtonCallback() {
       void onClick() {
         switch (quiz.state) {
           case QUESTIONS:
@@ -222,7 +222,7 @@ class SceneQuiz extends Scene {
     buttonConfirm.hide();
     elements.add(buttonConfirm);
 
-    buttonContinue = new ButtonAction(846, 701, 22, 8, "Nächste Frage", new ButtonActionCallback() {
+    buttonContinue = new ButtonAction(846, 701, 22, 8, "Nächste Frage", new ButtonCallback() {
       void onClick() {
         quiz.nextQuestion();
         buttonContinue.hide();

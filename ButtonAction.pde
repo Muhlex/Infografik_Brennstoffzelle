@@ -3,9 +3,9 @@ class ButtonAction extends Button {
   int paddingX;
   int paddingY;
   String label;
-  ButtonActionCallback callback;
+  ButtonCallback callback;
 
-  ButtonAction(int x, int y, int paddingX, int paddingY, String label, ButtonActionCallback callback) {
+  ButtonAction(int x, int y, int paddingX, int paddingY, String label, ButtonCallback callback) {
     super(x, y, 32, 32);
     this.x = x;
     this.y = y;
@@ -68,8 +68,4 @@ class ButtonAction extends Button {
 
     popStyle();
   }
-}
-
-interface ButtonActionCallback {
-  void onClick();
 }

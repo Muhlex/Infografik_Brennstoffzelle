@@ -9,6 +9,8 @@ abstract class Element {
 
   void onClick(boolean insideElement) {};
 
+  void onMouseDragged(boolean insideElement) {};
+
   void onKeyPressed() {};
 
   void onKeyReleased() {};

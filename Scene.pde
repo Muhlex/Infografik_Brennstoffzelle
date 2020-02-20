@@ -34,6 +34,23 @@ class Scene {
     }
   }
 
+  void onMouseDragged() {
+    ArrayList<Element> visibleElements = new ArrayList<Element>();
+    for (Element e : elements) {
+      if (! e.isHidden) {
+        visibleElements.add(e);
+      }
+    }
+    for (Element e: visibleElements) {
+      if (isMouseInsideRect(e.x, e.y, e.x + e.w, e.y + e.h)) {
+        e.onMouseDragged(true);
+      }
+      else {
+        e.onMouseDragged(false);
+      }
+    }
+  }
+
   void onKeyPressed() {
     for (Element e : elements) {
       if (! e.isHidden) {
