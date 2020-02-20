@@ -15,8 +15,8 @@ class SceneQuiz extends Scene {
   int quizTime;
   int quizQuestionCount;
 
-  SceneQuiz() {
-    super();
+  SceneQuiz(PApplet sketch) {
+    super(sketch);
 
     // Initialize Quiz
 

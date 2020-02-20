@@ -1,6 +1,8 @@
 import java.util.*;
+import processing.sound.*;
 
 int currentScene = 0;
+int prevStep = -1;
 int currStep = 0;
 Scene[] scenes = new Scene[3];
 
@@ -56,9 +58,9 @@ void setup() {
   fontBodyBold    = createFont("font/Sarabun-Bold.ttf",    fontBodySize);
   fontMini        = createFont("font/Sarabun-Regular.ttf", fontMiniSize);
 
-  scenes[0] = new SceneIntro();
-  scenes[1] = new SceneInfographics();
-  scenes[2] = new SceneQuiz();
+  scenes[0] = new SceneIntro(this);
+  scenes[1] = new SceneInfographics(this);
+  scenes[2] = new SceneQuiz(this);
 
   // Use 0 to 1 Alpha instead of 0 to 255
   colorMode(RGB, 255, 255, 255, 1);

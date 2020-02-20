@@ -1,7 +1,12 @@
 class Scene {
+
+  PApplet sketch;
   ArrayList<Element> elements;
 
-  Scene() {
+  Scene(PApplet sketch) {
+    // Provide reference to the processing sketch inside all scenes
+    this.sketch = sketch;
+
     elements = new ArrayList<Element>();
 
     // Initialize Navigation

@@ -24,6 +24,8 @@ class SceneInfographics extends Scene {
   PShape shapeVolume;
   PShape shapeVolumeDisabled;
 
+  SoundFile[] narrationSounds;
+
   ButtonStep prevButton;
   ButtonStep nextButton;
 
@@ -52,8 +54,8 @@ class SceneInfographics extends Scene {
   float[] previousTimestamps;
   int[] seeds;
 
-  SceneInfographics() {
-    super();
+  SceneInfographics(PApplet sketch) {
+    super(sketch);
 
     illustrationBG         = loadShape("img/svg/infographics_bg.svg");
     lightbulbOff           = loadShape("img/svg/bulb.svg");
@@ -111,9 +113,12 @@ class SceneInfographics extends Scene {
       "So funktioniert die \bBrennstoffzelle.\n"+
       "Wenn Du dich jetzt fit fühlst, kannst du dich am \bQuiz versuchen!\n\n" +
       "\bFun \bFact: Die CO"+sub2+"-Bilanz bei der Herstellung eines Brennstoffzellenfahrzeugs ist nur etwa 50% so hoch, wie bei einem klassischen Elektroauto. "
-      //"Da die chemisch gebundene Energie jedoch nur mit einem Wirkungsgrad von bis zu 60% in elektrische Energie umgewandelt werden kann, ist die Gesamtbilanz " +
-      //"(unter Einbezug der Betriebsphase) schlechter."
     };
+
+    narrationSounds = new SoundFile[stepDescriptions.length];
+    for (int i = 0; i < narrationSounds.length; i++) {
+      narrationSounds[i] = new SoundFile(sketch, "audio/step"+i+".wav");
+    }
 
     stepHighlightBounds = new Area[] {
       null, // First step does not have any moving elements
@@ -319,6 +324,16 @@ class SceneInfographics extends Scene {
 
   @Override
   void draw() {
+    // NARRATION
+    if (prevStep != currStep) {
+      if (prevStep >= 0 && narrationSounds[prevStep].isPlaying()) {
+        narrationSounds[prevStep].stop();
+      }
+      narrationSounds[currStep].play();
+
+      prevStep = currStep;
+    }
+
     // STATIC ELEMENTS (these do not get pushed into the elements ArrayList)
 
     shape(illustrationBG, 197, 201, 646, 364);

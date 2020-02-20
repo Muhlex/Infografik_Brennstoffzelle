@@ -2,8 +2,8 @@ class SceneIntro extends Scene {
 
   PImage illustration;
 
-  SceneIntro() {
-    super();
+  SceneIntro(PApplet sketch) {
+    super(sketch);
 
     illustration = loadImage("img/png/start_illustration.png");
   }
