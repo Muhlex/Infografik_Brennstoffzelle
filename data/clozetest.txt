@@ -5,5 +5,5 @@ Wasserstoff
 getrennt werden, wandern sie über einen elektrischen Leiter zur
 Kathode
 . Dort reduzieren sie Sauerstoffmoleküle, die durch Außenluft zugeführt werden, zu
-Sauerstoffionen
-.
+Sauerstoff
+-Ionen.
