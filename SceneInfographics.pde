@@ -377,8 +377,6 @@ class SceneInfographics extends Scene {
 
     shape(illustrationBG, 197, 201, 646, 364);
 
-    float secondsPerCycle = 40;
-
     prevTime = currTime;
     currTime = millis();
     int millisPerDraw = currTime - prevTime;
