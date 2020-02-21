@@ -33,6 +33,8 @@ class SceneInfographics extends Scene {
   ButtonIcon pauseButton;
   InputSlider speedSlider;
 
+  ButtonIconText repeatButton;
+
   float fadeTime;
 
   String[] stepDescriptions;
@@ -223,6 +225,16 @@ class SceneInfographics extends Scene {
       }
     });
     elements.add(speedSlider);
+
+    repeatButton = new ButtonIconText(839, 580, 24, loadShape("img/svg/repeat.svg"), "Sprachausgabe wiederholen", new ButtonCallback() {
+      void onClick() {
+        if (narrationSounds[currStep].isPlaying()) {
+          narrationSounds[currStep].stop();
+        }
+        narrationSounds[currStep].play();
+      }
+    });
+    elements.add(repeatButton);
   }
 
   @Override
@@ -415,7 +427,7 @@ class SceneInfographics extends Scene {
     textAlign(LEFT, TOP);
     textLeading(fontMiniSize * defaultLineHeight);
 
-    text("Steuerung per Pfeiltasten oder Zahlentasten 1-" + stepDescriptions.length + " möglich", 32, 587);
+    text("Steuerung per Pfeiltasten oder Zahlentasten 1-" + stepDescriptions.length + " möglich", 32, 583);
 
     // Step description text
     fill(colBright);
