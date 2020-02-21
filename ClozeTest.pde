@@ -10,8 +10,8 @@ class ClozeTest {
   IntList validate(StringList answers) {
     IntList correctAnswers = new IntList();
     for (int i = 0; i < solutions.size(); i++) {
-      String answer   = answers.get(i).toLowerCase();
-      String solution = solutions.get(i).toLowerCase();
+      String answer   = answers.get(i).toLowerCase().trim();
+      String solution = solutions.get(i).toLowerCase().trim();
 
       if (answer.equals(solution)) {
         correctAnswers.append(i);
