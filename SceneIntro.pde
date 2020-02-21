@@ -49,7 +49,7 @@ class SceneIntro extends Scene {
     textAlign(LEFT, TOP);
     textLeading(fontBodySize * defaultLineHeight);
 
-    buffer = "\bFelix \bBastian\nInteraktive Lehrmedien\nProf. Ralph Tille\nWintersemester 2019/-20";
+    buffer = "\bFelix \bBastian\nInteraktive Werkzeuge\nProf. Ralph Tille\nWintersemester 2019/-20";
     textExt(buffer, 32, 664, 320, fontBodyBold);
 
     popStyle();
